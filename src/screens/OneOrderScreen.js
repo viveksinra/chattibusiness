@@ -1,12 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Image, StyleSheet } from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { startUrl } from '../Context/ContentContext';
 import axios from 'axios';
 import * as SecureStore from 'expo-secure-store';
+import ChangeStatusCom from '../components/OrderHistoryItem/ChangeStatusCom';
 
 const OneOrderScreen = ({ route }) => {
   const { orderId } = route.params;
   const [order, setOrder] = useState(null);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [modalDescription, setModalDescription] = useState('');
+  const [modalInputLabel, setModalInputLabel] = useState('');
+
 
   const getOneOrder = async () => {
     const url = `${startUrl}/chattiApi/allCommon/order/get/oneOrder/${orderId}`;
@@ -37,6 +42,84 @@ const OneOrderScreen = ({ route }) => {
   useEffect(() => {
     getOneOrder();
   }, []);
+
+  useEffect(() => {
+    getOneOrder();
+  }, []);
+
+  const handleStatusChange = async (newStatus) => {
+    // Logic for handling status change and prompting for comments
+    setModalDescription(`Enter comments for changing status to ${newStatus}`);
+    setModalInputLabel('Comments');
+    setModalVisible(true);
+  };
+
+  const handleConfirmStatusChange = async (comments) => {
+    // Call API to update status with comments
+    setModalVisible(false);
+  };
+
+  const handleCancelOrder = () => {
+    // Logic for handling cancel order
+    setModalDescription('Are you sure you want to cancel this order?');
+    setModalInputLabel('');
+    setModalVisible(true);
+  };
+
+  const handleConfirmCancelOrder = async () => {
+    // Call API to cancel order
+    setModalVisible(false);
+  };
+
+  const renderRightButton = () => {
+    if (order) {
+      switch (order.orderStatus.id) {
+        case 'new':
+          return (
+            <TouchableOpacity onPress={() => handleStatusChange('accepted')}>
+              <Text style={[styles.button, styles.acceptOrder]}>Accept Order</Text>
+            </TouchableOpacity>
+            
+          );
+        case 'accepted':
+          return (
+            <TouchableOpacity onPress={() => handleStatusChange('pickupScheduled')}>
+            <Text style={[styles.button, styles.acceptOrder]}>Pickup Scheduled</Text>
+          </TouchableOpacity>       
+          );
+        case 'pickupScheduled':
+          return (
+            <TouchableOpacity onPress={() => handleStatusChange('pickupCompleted')}>
+            <Text style={[styles.button, styles.acceptOrder]}>Pickup Completed</Text>
+          </TouchableOpacity>       
+          );
+        case 'pickupCompleted':
+          return (
+            <TouchableOpacity onPress={() => handleStatusChange('paymentDistributed')}>
+            <Text style={[styles.button, styles.acceptOrder]}>Payment Distributed</Text>
+          </TouchableOpacity>       
+          );
+        case 'paymentDistributed':
+          return (
+            <TouchableOpacity onPress={() => handleStatusChange('allCompleted')}>
+            <Text style={[styles.button, styles.acceptOrder]}>All Completed</Text>
+          </TouchableOpacity>       
+          );
+        case 'cancelled':
+          return (
+            <DropdownMenu
+              options={['Reopen']}
+              onSelect={(option) => handleStatusChange(option)}
+            />
+          );
+        default:
+          return null;
+      }
+    } else {
+      return null;
+    }
+  };
+
 
   if (!order) {
     return (
@@ -72,6 +155,19 @@ const OneOrderScreen = ({ route }) => {
           <Text style={styles.calculation}>{calculationText}</Text>
         <Text style={styles.total}>Total Amount: ₹{totalAmount.toFixed(2)}</Text>
       </View>
+      <View style={styles.buttonsContainer}>
+        <TouchableOpacity onPress={handleCancelOrder}>
+          <Text style={[styles.button, styles.cancelButton]}>Cancel Order</Text>
+        </TouchableOpacity>
+        {renderRightButton()}
+      </View>
+      <ChangeStatusCom
+        visible={modalVisible}
+        description={modalDescription}
+        inputLabel={modalInputLabel}
+        onConfirm={modalInputLabel ? handleConfirmStatusChange : handleConfirmCancelOrder}
+        onCancel={() => setModalVisible(false)}
+      />
     </>
   );
 };
@@ -127,6 +223,26 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  buttonsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: 20,
+    paddingBottom: 20,
+  },
+  button: {
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+  },
+  cancelButton: {
+    backgroundColor: 'red',
+    color: 'white',
+  },
+  acceptOrder: {
+    backgroundColor: 'green',
+    color: 'white',
+  },
+  
 });
 
 export default OneOrderScreen;
