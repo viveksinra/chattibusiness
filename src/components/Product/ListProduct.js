@@ -1,17 +1,28 @@
-import React from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity, Button, Pressable } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, Image, StyleSheet, TouchableOpacity, Pressable } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
-import { FontAwesome } from '@expo/vector-icons';
+import { MaterialIcons } from '@expo/vector-icons';
+import PriceUpdateModal from './PriceUpdateModal';
 
-const ListProduct = ({product}) => {
+const ListProduct = ({ product }) => {
   const { t } = useTranslation();
-  const pricePerKg = product.price / 100;
-
   const navigation = useNavigation();
-  function sendToOrderProcess() {
+
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [newPrice, setNewPrice] = useState('');
+
+  const sendToOrderProcess = () => {
     navigation.navigate('OrderProcessScreen', { product: product });
-  }
+  };
+
+  const handleUpdate = (price) => {
+    // Call your API here to update the price with axios
+    // After updating the price, you can close the modal
+    setIsModalVisible(false);
+    setNewPrice('');
+  };
+
   return (
     <TouchableOpacity style={styles.container} onPress={() => sendToOrderProcess()}>
       <View style={styles.imageContainer}>
@@ -23,16 +34,23 @@ const ListProduct = ({product}) => {
       </View>
       <View style={styles.infoContainer}>
         {/* Product Information */}
-        <Text style={styles.name}>{ (t('LanguageCode') === "en-IN" )? product.productName : product.productNameHindi}</Text>
-        <Text style={styles.quality}>{t('product.one')} { (t('LanguageCode') === "en-IN" )? product.quality : product.qualityHindi}</Text>
+        <Text style={styles.name}>{t('LanguageCode') === "en-IN" ? product.productName : product.productNameHindi}</Text>
+        <Text style={styles.quality}>{t('product.one')} {t('LanguageCode') === "en-IN" ? product.quality : product.qualityHindi}</Text>
         <Text style={styles.price}>{t('product.two')}{product.price}/{t('opScreen1.two')}</Text>
-          
-            {/* Add to Cart Button */}
-            <Pressable style={styles.addButton} onPress={() => sendToOrderProcess()}>
-      <Text style={styles.buttonText}>{t('product.three')}     </Text>
-      <FontAwesome name="arrow-right" size={24} color="white" />
-    </Pressable>
+
+        <Pressable style={styles.addButton} onPress={() => setIsModalVisible(true)}>
+          <Text style={styles.buttonText}>{t('product.three')}</Text>
+          <MaterialIcons name="update" size={24} color="white" />
+        </Pressable>
       </View>
+
+      {/* Price Update Modal */}
+      <PriceUpdateModal
+        isVisible={isModalVisible}
+        onClose={() => setIsModalVisible(false)}
+        onUpdate={handleUpdate}
+        currentPrice={product.price}
+      />
     </TouchableOpacity>
   );
 };
@@ -59,7 +77,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   addButton: {
-    flexDirection:"row",
+    flexDirection: "row",
     alignItems: 'center',
     justifyContent: 'center',
     paddingVertical: 12,
@@ -67,7 +85,7 @@ const styles = StyleSheet.create({
     elevation: 10,
     backgroundColor: '#856201',
     borderRadius: 8,
-    marginTop:10
+    marginTop: 10
   },
   buttonText: {
     fontSize: 18,
