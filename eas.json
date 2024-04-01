@@ -1,0 +1,33 @@
+{
+  "cli": {
+    "version": ">= 4.1.2"
+  },
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal"
+    },
+    "preview": {
+      "distribution": "internal"
+    },
+     "getApk": {
+      "android": {
+        "buildType": "apk"
+      }
+    },
+    "getApk2": {
+      "android": {
+        "gradleCommand": ":app:assembleRelease"
+      }
+    },
+    "getApk3": {
+      "developmentClient": true
+    },
+    "production": {
+      "autoIncrement": true
+    }
+  },
+  "submit": {
+    "production": {}
+  }
+}

@@ -1,0 +1,79 @@
+
+{
+  "translation": {
+    "LanguageCode": "en-IN",
+    "Login.one":"Log in / Sign up",
+    "Login.two":"Please provide your Mobile Number to continue",
+    "Login.three":"Mobile Number",
+    "otp.one":"OTP Verification✅",
+    "otp.two":"We have sent you an OTP to verify your Mobile Number",
+    "otp.three":"Edit",
+    "otp.four":"OTP",
+    "otp.five":"Enter OTP",
+    "otp.six":"Verify",
+    "otp.seven":"Didn't receive a code? Resend code",
+
+    "secMain.one":"Choose ",
+    "secMain.two":"Your Corn ",
+    "secMain.three":"Quality:-",
+  
+    "product.one":"Quality: ",
+    "product.two":"Price: ₹",
+    "product.three":"Sell This",
+
+    "lanPop.one":"Select Language",
+    "lanPop.two":"Close",
+    "setting.one":"Share App Link",
+    "setting.two":"Share on WhatsApp",
+    "setting.three":"Please Rate Our App",
+    "logout.one":"Log Out",
+    "logout.two":"Log Out Confirmation",
+    "logout.three":"Are you sure you want to Log Out?",
+    "logout.four":"Cancel",
+    "tAndC":"By signing up you agree to our Terms of use and Privacy Policy (Click to View)",
+
+    "opSc.one": "Order Details",
+    "opSc.two": "Address Selector",
+    "opSc.three": "Payment Details",
+    "opSc.four": "Back",
+    "opSc.five": "Next",
+    "opSc.six": "Submit",
+
+    "opScreen1.one":"kg",
+    "opScreen1.two":"Quintal",
+    "opScreen1.three":"Mobile Number* (required)",
+    "opScreen1.four":"Weight in kg",
+    "opScreen1.five":"Price",
+
+    "opScreen2.one": "Enter the Pickup Address (not Required)",
+    "opScreen2.two": "Flat / House No. / Floor / Building",
+    "opScreen2.three": "Street Address",
+    "opScreen2.four": "District",
+    "opScreen2.five": "State",
+    "opScreen2.six": "Pincode",
+    
+    "opScreen3.one": "Select Payment Method:",
+    "opScreen3.two": "Cash",
+    "opScreen3.three": "UPI",
+    "opScreen3.four": "Bank Account",
+    "opScreen3.five": "Enter UPI ID",
+    "opScreen3.six": "Enter Account Number",
+    "opScreen3.seven": "Enter Account Holder Name",
+    "opScreen3.eight": "Enter IFSC Code",
+    
+
+    "orderHis.one":"From Where man",
+    "orderHis.two":"You Haven't Placed Any Order",
+    "orderHis.three":"Order Now",
+    
+
+    "title":"Welcome",
+    "status":"Thanks for Downloading and Using our App",
+    "tab.orders":"Orders",
+    "tab.home":"Home",
+    "tab.setting":"Settings",
+  
+    "setting.language":"Language",
+    "shareMessage": "🌟 Experience the Talk to God App – Your Spiritual Companion! 🌟🗣️ Speak Your Heart: Ask questions, seek guidance, and receive answers. ✨ Download Now and Elevate Your Spiritual Connection! ✨"
+    }
+}

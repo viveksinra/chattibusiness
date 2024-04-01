@@ -1,0 +1,51 @@
+{
+  "expo": {
+    "name": "Chattibuisness",
+    "slug": "chatti-business",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./commonAssets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./commonAssets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#B20A2C"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "versionCode": 13,
+      "adaptiveIcon": {
+        "foregroundImage": "./commonAssets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "package": "com.softechinfra.chattibuisness",
+      "permissions": [
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.ACCESS_FINE_LOCATION"
+      ]
+    },
+    "web": {
+      "favicon": "./commonAssets/favicon.png"
+    },
+    "owner": "viveksinra",
+    "extra": {
+      "eas": {
+        "projectId": "dddcbc3f-3ee7-400b-bc15-1295669581f1"
+      }
+    },
+    "plugins": [
+      "expo-secure-store",
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Allow Chatti App to use your location."
+        }
+      ]
+    ]
+  }
+}
