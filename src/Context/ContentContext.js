@@ -3,7 +3,7 @@ let ContentContext = {
      startUrl : "https://qualifier.co.in",
 //  startUrl : "http://192.168.1.3:2040",
 //  startUrl : "http://192.168.1.10:2040",
-orderHisBag:"https://images.unsplash.com/photo-1541140134513-85a161dc4a00?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Z3JleSUyMHRleHR1cmV8ZW58MHx8MHx8fDA%3D",
+orderHisBag:"https://pub-static.fotor.com/assets/bg/3e2ec15e-01a7-4de9-863d-a26dc172a574.jpg",
 mainBg:"https://www.onlygfx.com/wp-content/uploads/2021/04/white-triangle-pattern-seamless-background-2.jpg",
 loginImg:"https://res.cloudinary.com/qualifierphoto/image/upload/v1702646398/enter-your-number-for-for-2-step-verification-illustration-concept-vector-removebg-preview_ss2bql.png",
 mainPicImg:"https://res.cloudinary.com/qualifierphoto/image/upload/v1711957687/chatti/corn_vlthil-removebg-preview_dprwun.png",

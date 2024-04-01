@@ -16,13 +16,17 @@ const OrderListItem = ({ order }) => {
     <TouchableOpacity style={styles.container} onPress={handleOneOrder}>
       <Image source={{ uri: order.product.productImage }} style={styles.image} />
       <View style={styles.details}>
+
       <Text style={styles.date}>Date: {order.orderDate}</Text>
 
         <Text style={styles.productName}>{order.product.productName}</Text>
+      <Text style={styles.mobile}>Mobile: {order.mobileNumber}</Text>
         <Text style={styles.status}>Status: {order.orderStatus.label}</Text>
          <View style={styles.totalContainer}>
            <Text style={styles.calculation}>{calculationText}</Text>
+           
         <Text style={styles.total}>: ₹{totalAmount.toFixed(2)}</Text>
+
         </View>
     
       </View>
