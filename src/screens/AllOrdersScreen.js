@@ -12,14 +12,17 @@ const image = { uri: ContentContext.orderHisBag };
 
 const AllOrdersScreen = () => {
   const [loading, setLoading] = useState(false);
-  const [orders, setOrders] = useState([]);
+  const [newOrders, setNewOrders] = useState([]);
+  const [acceptedOrders, setAcceptedOrders] = useState([]);
+  const [cancelledOrders, setCancelledOrders] = useState([]);
   const [selectedTab, setSelectedTab] = useState('new'); // Default to 'New'
+
   const { t } = useTranslation();
 
   const updateOrderHis = async () => {
     setLoading(true);
     try {
-      let url = `${startUrl}/chattiApi/allCommon/order/get/allOrder`;
+      let url = `${startUrl}/chattiApi/allCommon/order/get/allOrder/${selectedTab}`;
       let token = await SecureStore.getItemAsync('authToken');
       const response = await axios.post(
         url,
@@ -33,10 +36,20 @@ const AllOrdersScreen = () => {
       );
       let myRes = response.data;
       if (myRes.variant === 'success') {
-        setOrders(myRes.data);
+        if (selectedTab === "accepted") {
+          setAcceptedOrders(myRes.data);
+        } else if (selectedTab === "cancelled") {
+          setCancelledOrders(myRes.data);
+        } else {
+          setNewOrders(myRes.data);
+        }
         ToastAndroid.show('Data Loaded.. ', ToastAndroid.SHORT);
+      } else {
+        // Show a more specific error message here if needed
+        ToastAndroid.show('Some error occurred ', ToastAndroid.SHORT);
       }
     } catch (error) {
+      // Show a more specific error message here if needed
       ToastAndroid.show('Some error occurred ', ToastAndroid.SHORT);
       console.log('Some error occurred while sending or setting the message' + error);
     }
@@ -45,9 +58,7 @@ const AllOrdersScreen = () => {
 
   useEffect(() => {
     updateOrderHis();
-  }, []);
-
-  const filteredOrders = orders.filter(order => order.orderStatus.id === selectedTab);
+  }, [selectedTab]); // Include selectedTab in the dependency array
 
   const renderTabs = () => {
     const tabs = [
@@ -73,11 +84,13 @@ const AllOrdersScreen = () => {
         <View style={styles.tabsContainer}>
           {renderTabs()}
         </View>
-        {filteredOrders.length === 0 ? (
+        {(selectedTab === 'new' && newOrders.length === 0) ||
+         (selectedTab === 'accepted' && acceptedOrders.length === 0) ||
+         (selectedTab === 'cancelled' && cancelledOrders.length === 0) ? (
           <NoOrderHistory />
         ) : (
           <FlatList
-            data={filteredOrders}
+            data={selectedTab === 'new' ? newOrders : selectedTab === 'accepted' ? acceptedOrders : cancelledOrders}
             keyExtractor={(item, index) => index.toString()}
             renderItem={({ item }) => <OrderListItem order={item} />}
           />

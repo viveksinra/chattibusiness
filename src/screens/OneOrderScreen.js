@@ -3,8 +3,10 @@ import { View, Text, Image, StyleSheet, TouchableOpacity, ToastAndroid } from 'r
 import { startUrl } from '../Context/ContentContext';
 import axios from 'axios';
 import * as SecureStore from 'expo-secure-store';
-import ChangeStatusCom from '../components/OrderHistoryItem/ChangeStatusCom';
-import CallMsgButton from '../components/OrderHistoryItem/CallMsgButton';
+import ChangeStatusCom from '../components/OneOrderCom/ChangeStatusCom';
+import OrderButtonComponent from '../components/OneOrderCom/OrderButtonComponent';
+import OrderDetailsComponent from '../components/OneOrderCom/OrderDetailsComponent';
+import ProductDetailsComponent from '../components/OneOrderCom/ProductDetailsComponent';
 
 const OneOrderScreen = ({ route }) => {
   const { orderId } = route.params;
@@ -132,32 +134,16 @@ const OneOrderScreen = ({ route }) => {
   return (
     <>
       <View style={styles.container}>
-        <Image source={{ uri: order.product.productImage }} style={styles.image} />
-        <View style={styles.details}>
-          <Text style={styles.productName}>{order.product.productName}</Text>
-          <Text>{order.product.quality}</Text>
-          <Text>Price: ₹{order.product.price}</Text>
-          <CallMsgButton mobileNumber={order.mobileNumber} />
-        </View>
+        <ProductDetailsComponent product={order.product} />
       </View>
 
-      <View style={styles.totalContainer}>
-        <Text style={styles.commonText}>Weight: {order.weightInKg} kg</Text>
-        <Text style={styles.commonText}>Mobile Number: {order.mobileNumber}</Text>
-        <Text style={styles.commonText}>Order Date: {order.orderDate}</Text>
-        <Text style={styles.commonText}>Order Status: {order.orderStatus.label}</Text>
-        <Text style={styles.commonText}>Payment Method: {order.selectedPaymentMethod.label}</Text>
-        <Text style={styles.calculation}>{calculationText}</Text>
-        <Text style={styles.total}>Total Amount: ₹{totalAmount.toFixed(2)}</Text>
-      </View>
+      <OrderDetailsComponent order={order} totalAmount={totalAmount} />
 
-      <View style={styles.buttonsContainer}>
-        {(order.orderStatus.id !== "cancelled" && order.orderStatus.id !== "allCompleted") &&
-          <TouchableOpacity onPress={handleCancelOrder}>
-            <Text style={[styles.button, styles.cancelButton]}>Cancel Order</Text>
-          </TouchableOpacity>}
-        {renderRightButton()}
-      </View>
+      <OrderButtonComponent
+        order={order}
+        handleCancelOrder={handleCancelOrder}
+        renderRightButton={renderRightButton}
+      />
 
       <ChangeStatusCom
         visible={modalVisible}
@@ -184,64 +170,7 @@ const styles = StyleSheet.create({
     borderColor: '#ddd',
     marginBottom: 10,
   },
-  image: {
-    width: 70,
-    height: 70,
-    marginRight: 10,
-  },
-  details: {
-    flex: 1,
-  },
-  productName: {
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  calculation: {
-    fontSize: 24,
-    color: '#333',
-    marginBottom: 5,
-    marginTop: 30
-  },
-  total: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#2ecc71',
-  },
-  commonText: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: 'black',
-    marginTop: 10
-  },
-  totalContainer: {
-    alignItems: 'flex-start',
-    marginLeft: 20,
-    marginBottom: 20,
-  },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  buttonsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    paddingBottom: 20,
-  },
-  button: {
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 5,
-  },
-  cancelButton: {
-    backgroundColor: 'red',
-    color: 'white',
-  },
-  acceptOrder: {
-    backgroundColor: 'green',
-    color: 'white',
-  },
+ 
 });
 
 export default OneOrderScreen;
