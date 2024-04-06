@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, Modal, StyleSheet, TouchableOpacity } from 'react-native';
 import { AntDesign } from '@expo/vector-icons'; // make sure to install @expo/vector-icons
 
-const ChangeStatusCom = ({ visible, description, inputLabel, onConfirm, onCancel }) => {
+const ChangeStatusCom = ({ visible, description, inputLabel, onConfirm, onCancel,comment,setComment }) => {
   const [inputValue, setInputValue] = useState('');
 
   return (
@@ -16,8 +16,8 @@ const ChangeStatusCom = ({ visible, description, inputLabel, onConfirm, onCancel
           <Text style={styles.inputLabel}>{inputLabel}</Text>
           <TextInput
             style={styles.input}
-            value={inputValue}
-            onChangeText={setInputValue}
+            value={comment}
+            onChangeText={setComment}
             placeholder="Enter Comment.."
           />
           <View style={styles.buttonsContainer}>

@@ -13,7 +13,11 @@ const OneOrderScreen = ({ route }) => {
   const [modalDescription, setModalDescription] = useState('');
   const [modalInputLabel, setModalInputLabel] = useState('');
   const [newStatus, setNewStatus] = useState({label:"",id:""});
-  const [comment, setComment] = useState({label:"",id:""});
+  const [comment, setComment] = useState("");
+  const [isCancel, setIsCancel] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+
 
 
   const getOneOrder = async () => {
@@ -49,15 +53,18 @@ const OneOrderScreen = ({ route }) => {
     getOneOrder();
   }, []);
 
-  const handleStatusChange = async (newStatus) => {
+  const handleStatusChange = async (newStatusLabel, newStatusId) => {
     // Logic for handling status change and prompting for comments
-    setModalDescription(`Enter comments for changing status to ${newStatus}`);
+    setModalDescription(`Enter comments for changing status to ${newStatusLabel}`);
     setModalInputLabel('Write if any comment');
     setModalVisible(true);
+    setIsCancel(false)
+    setNewStatus({label:newStatusLabel,id:newStatusId})
   };
 
-  const handleConfirmStatusChange = async (comments) => {
-    // Call API to update status with comments
+  const handleConfirmStatusChange = async () => {
+    changeStatusApi(newStatus)
+
     setModalVisible(false);
   };
 
@@ -65,20 +72,30 @@ const OneOrderScreen = ({ route }) => {
     // Logic for handling cancel order
     setModalDescription('Are you sure you want to cancel this order?');
     setModalInputLabel('Why You want to Cancel?');
+    setIsCancel(true)
 
     setModalVisible(true);
   };
 
   const handleConfirmCancelOrder = async () => {
+    console.log("Getting called")
     // Call API to cancel order
     // /updateOrderStatus/oneOrder/:orderId
     let myStatus = ({label:"Cancelled",id:"cancelled"})
 
     setNewStatus(myStatus)
+    changeStatusApi(myStatus)
+   
+
+    setModalVisible(false);
+  };
+
+  const changeStatusApi = async(myStatus) => {
     setLoading(true);
     try {
-      const url = `${startUrl}/updateOrderStatus/oneOrder/${orderId}`;
+      const url = `${startUrl}/chattiApi/allCommon/updateOrderStatus/oneOrder/${orderId}`;
       const token = await SecureStore.getItemAsync('authToken');
+      console.log(url)
       const response = await axios.post(
         url,
         { newStatus:myStatus, comment, },
@@ -99,47 +116,45 @@ const OneOrderScreen = ({ route }) => {
     } finally {
       setLoading(false);
     }
-
-    setModalVisible(false);
-  };
+  }
 
   const renderRightButton = () => {
     if (order) {
       switch (order.orderStatus.id) {
         case 'new':
           return (
-            <TouchableOpacity onPress={() => handleStatusChange('accepted')}>
+            <TouchableOpacity onPress={() => handleStatusChange('Accepted','accepted')}>
               <Text style={[styles.button, styles.acceptOrder]}>Accept Order</Text>
             </TouchableOpacity>
             
           );
         case 'accepted':
           return (
-            <TouchableOpacity onPress={() => handleStatusChange('pickupScheduled')}>
+            <TouchableOpacity onPress={() => handleStatusChange('PickupScheduled','pickupScheduled')}>
             <Text style={[styles.button, styles.acceptOrder]}>Pickup Scheduled</Text>
           </TouchableOpacity>       
           );
         case 'pickupScheduled':
           return (
-            <TouchableOpacity onPress={() => handleStatusChange('pickupCompleted')}>
+            <TouchableOpacity onPress={() => handleStatusChange('PickupCompleted','pickupCompleted')}>
             <Text style={[styles.button, styles.acceptOrder]}>Pickup Completed</Text>
           </TouchableOpacity>       
           );
         case 'pickupCompleted':
           return (
-            <TouchableOpacity onPress={() => handleStatusChange('paymentDistributed')}>
+            <TouchableOpacity onPress={() => handleStatusChange('PaymentDistributed','paymentDistributed')}>
             <Text style={[styles.button, styles.acceptOrder]}>Payment Distributed</Text>
           </TouchableOpacity>       
           );
         case 'paymentDistributed':
           return (
-            <TouchableOpacity onPress={() => handleStatusChange('allCompleted')}>
+            <TouchableOpacity onPress={() => handleStatusChange('AllCompleted','allCompleted')}>
             <Text style={[styles.button, styles.acceptOrder]}>All Completed</Text>
           </TouchableOpacity>       
           );
         case 'cancelled':
           return (
-            <TouchableOpacity onPress={() => handleStatusChange('reopen')}>
+            <TouchableOpacity onPress={() => handleStatusChange('Reopen','reopen')}>
             <Text style={[styles.button, styles.acceptOrder]}>Reopen</Text>
           </TouchableOpacity> 
           );
@@ -190,17 +205,18 @@ const OneOrderScreen = ({ route }) => {
       </View>
 
       <View style={styles.buttonsContainer}>
-        <TouchableOpacity onPress={handleCancelOrder}>
+        {(order.orderStatus.id !== "cancelled")&&<TouchableOpacity onPress={handleCancelOrder}>
           <Text style={[styles.button, styles.cancelButton]}>Cancel Order</Text>
-        </TouchableOpacity>
+        </TouchableOpacity>}
         {renderRightButton()}
       </View>
       <ChangeStatusCom
         visible={modalVisible}
         description={modalDescription}
         inputLabel={modalInputLabel}
-        onConfirm={modalInputLabel ? handleConfirmStatusChange : handleConfirmCancelOrder}
+        onConfirm={isCancel ?  handleConfirmCancelOrder : handleConfirmStatusChange}
         onCancel={() => setModalVisible(false)}
+        comment={comment}
         setComment={setComment}
       />
     </>
