@@ -1,6 +1,8 @@
 import React from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity, Linking } from 'react-native';
+import { FontAwesome } from '@expo/vector-icons'; // Import FontAwesome icons
 import { useNavigation } from '@react-navigation/native';
+import CallMsgButton from './CallMsgButton';
 
 const OrderListItem = ({ order }) => {
   const navigation = useNavigation();
@@ -8,27 +10,26 @@ const OrderListItem = ({ order }) => {
   function handleOneOrder() {
     navigation.navigate('OneOrderScreen', { orderId: order._id });
   }
+
+ 
+
   const pricePerKg = order.product.price / 100;
   const totalAmount = (pricePerKg * parseFloat(order.weightInKg)) || 0;
-  const calculationText =  `₹${pricePerKg.toFixed(2)} x ${order.weightInKg} kg`;
+  const calculationText =  `${pricePerKg.toFixed(2)} x ${order.weightInKg} kg`;
 
   return (
     <TouchableOpacity style={styles.container} onPress={handleOneOrder}>
       <Image source={{ uri: order.product.productImage }} style={styles.image} />
       <View style={styles.details}>
-
-      <Text style={styles.date}>Date: {order.orderDate}</Text>
-
+        <Text style={styles.date}>Date: {order.orderDate}</Text>
         <Text style={styles.productName}>{order.product.productName}</Text>
-      <Text style={styles.mobile}>Mobile: {order.mobileNumber}</Text>
+        <Text style={styles.mobile}>Mobile: {order.mobileNumber}</Text>
         <Text style={styles.status}>Status: {order.orderStatus.label}</Text>
-         <View style={styles.totalContainer}>
-           <Text style={styles.calculation}>{calculationText}</Text>
-           
-        <Text style={styles.total}>: ₹{totalAmount.toFixed(2)}</Text>
-
+        <View style={styles.totalContainer}>
+          <Text style={styles.calculation}>{calculationText}</Text>
+          <Text style={styles.total}>: ₹{totalAmount.toFixed(2)}</Text>
         </View>
-    
+        <CallMsgButton mobileNumber={order.mobileNumber}/>
       </View>
     </TouchableOpacity>
   );
@@ -68,8 +69,8 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#2ecc71',
   },
-  totalContainer:{
-    flexDirection:'row',
+  totalContainer: {
+    flexDirection: 'row',
     alignItems: 'flex-start',
     marginBottom: 2,
   },
@@ -83,6 +84,7 @@ const styles = StyleSheet.create({
     color: '#6e7502',
     marginBottom: 5,
   },
+  
 });
 
 export default OrderListItem;

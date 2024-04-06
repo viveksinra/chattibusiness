@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity, Alert, ToastAndroid } from 'react-native';
 import { startUrl } from '../Context/ContentContext';
 import axios from 'axios';
 import * as SecureStore from 'expo-secure-store';
 import ChangeStatusCom from '../components/OrderHistoryItem/ChangeStatusCom';
+import CallMsgButton from '../components/OrderHistoryItem/CallMsgButton';
 
 const OneOrderScreen = ({ route }) => {
   const { orderId } = route.params;
@@ -11,6 +12,8 @@ const OneOrderScreen = ({ route }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [modalDescription, setModalDescription] = useState('');
   const [modalInputLabel, setModalInputLabel] = useState('');
+  const [newStatus, setNewStatus] = useState({label:"",id:""});
+  const [comment, setComment] = useState({label:"",id:""});
 
 
   const getOneOrder = async () => {
@@ -26,7 +29,6 @@ const OneOrderScreen = ({ route }) => {
           Authorization: token,
         },
       });
-      console.log(response.data);
       if (response.data.variant === "success") {
         const responseData = response.data; 
         setOrder(responseData.data);
@@ -50,7 +52,7 @@ const OneOrderScreen = ({ route }) => {
   const handleStatusChange = async (newStatus) => {
     // Logic for handling status change and prompting for comments
     setModalDescription(`Enter comments for changing status to ${newStatus}`);
-    setModalInputLabel('Comments');
+    setModalInputLabel('Write if any comment');
     setModalVisible(true);
   };
 
@@ -62,12 +64,42 @@ const OneOrderScreen = ({ route }) => {
   const handleCancelOrder = () => {
     // Logic for handling cancel order
     setModalDescription('Are you sure you want to cancel this order?');
-    setModalInputLabel('');
+    setModalInputLabel('Why You want to Cancel?');
+
     setModalVisible(true);
   };
 
   const handleConfirmCancelOrder = async () => {
     // Call API to cancel order
+    // /updateOrderStatus/oneOrder/:orderId
+    let myStatus = ({label:"Cancelled",id:"cancelled"})
+
+    setNewStatus(myStatus)
+    setLoading(true);
+    try {
+      const url = `${startUrl}/updateOrderStatus/oneOrder/${orderId}`;
+      const token = await SecureStore.getItemAsync('authToken');
+      const response = await axios.post(
+        url,
+        { newStatus:myStatus, comment, },
+        { headers: { 'Content-Type': 'application/json', Authorization: token } }
+      );
+      const myRes = response.data;
+      if (myRes?.message) {
+        ToastAndroid.show(myRes.message, ToastAndroid.SHORT);
+      } else {
+        ToastAndroid.show("Failed to Place Order", ToastAndroid.SHORT);
+      }
+      if (myRes.variant === "success") {
+        getOneOrder()
+      }
+    } catch (error) {
+      ToastAndroid.show('Some error occurred', ToastAndroid.SHORT);
+      console.error('Error saving order:', error);
+    } finally {
+      setLoading(false);
+    }
+
     setModalVisible(false);
   };
 
@@ -107,10 +139,9 @@ const OneOrderScreen = ({ route }) => {
           );
         case 'cancelled':
           return (
-            <DropdownMenu
-              options={['Reopen']}
-              onSelect={(option) => handleStatusChange(option)}
-            />
+            <TouchableOpacity onPress={() => handleStatusChange('reopen')}>
+            <Text style={[styles.button, styles.acceptOrder]}>Reopen</Text>
+          </TouchableOpacity> 
           );
         default:
           return null;
@@ -141,9 +172,11 @@ const OneOrderScreen = ({ route }) => {
           <Text style={styles.productName}>{order.product.productName}</Text>
           <Text>{order.product.quality}</Text>
           <Text>Price: ₹{order.product.price}</Text>
+      <CallMsgButton mobileNumber={order.mobileNumber}/>
        
         </View>
       </View>
+      
       <View style={styles.totalContainer}>
       
         <Text style={styles.commonText}>Weight: {order.weightInKg} kg</Text>
@@ -155,6 +188,7 @@ const OneOrderScreen = ({ route }) => {
           <Text style={styles.calculation}>{calculationText}</Text>
         <Text style={styles.total}>Total Amount: ₹{totalAmount.toFixed(2)}</Text>
       </View>
+
       <View style={styles.buttonsContainer}>
         <TouchableOpacity onPress={handleCancelOrder}>
           <Text style={[styles.button, styles.cancelButton]}>Cancel Order</Text>
@@ -167,6 +201,7 @@ const OneOrderScreen = ({ route }) => {
         inputLabel={modalInputLabel}
         onConfirm={modalInputLabel ? handleConfirmStatusChange : handleConfirmCancelOrder}
         onCancel={() => setModalVisible(false)}
+        setComment={setComment}
       />
     </>
   );

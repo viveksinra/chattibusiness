@@ -25,7 +25,6 @@ let apiChatCount = 0
     if(response.data.variant == "success"){ 
       apiChatCount = response.data.count;
     }
-console.log({'apiChat':apiChatCount,localChatCount})
     // if (localChatCount !== apiChatCount) {
     if ("localChatCount" !== "apiChatCount") {
       // If counts mismatch, make another API call to get all chats
@@ -38,9 +37,7 @@ console.log({'apiChat':apiChatCount,localChatCount})
       });
 
       const allChats = allChatsResponse.data.chatData;
-console.log(allChats)
-console.log(allChats.length)
-console.log(messages)
+
 replaceMessagesInAsyncStorageAndContext(allChats)
 // LocalDeleteAllChat(clearMessages)
       // Update the Message context with the new chats

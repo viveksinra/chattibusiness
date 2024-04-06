@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Modal, StyleSheet, TouchableOpacity } from 'react-native';
+import { AntDesign } from '@expo/vector-icons'; // make sure to install @expo/vector-icons
 
 const ChangeStatusCom = ({ visible, description, inputLabel, onConfirm, onCancel }) => {
   const [inputValue, setInputValue] = useState('');
@@ -8,17 +9,20 @@ const ChangeStatusCom = ({ visible, description, inputLabel, onConfirm, onCancel
     <Modal visible={visible} transparent>
       <View style={styles.modalContainer}>
         <View style={styles.modalContent}>
+          <TouchableOpacity onPress={onCancel} style={styles.crossButton}>
+            <AntDesign name="close" size={24} color="black" />
+          </TouchableOpacity>
           <Text style={styles.description}>{description}</Text>
           <Text style={styles.inputLabel}>{inputLabel}</Text>
           <TextInput
             style={styles.input}
             value={inputValue}
             onChangeText={setInputValue}
-            placeholder="Enter value"
+            placeholder="Enter Comment.."
           />
           <View style={styles.buttonsContainer}>
             <TouchableOpacity onPress={onCancel}>
-              <Text style={[styles.button, styles.cancelButton]}>Canceles</Text>
+              <Text style={[styles.button, styles.cancelButton]}>Cancel</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => onConfirm(inputValue)}>
               <Text style={[styles.button, styles.confirmButton]}>Confirm</Text>
@@ -29,6 +33,7 @@ const ChangeStatusCom = ({ visible, description, inputLabel, onConfirm, onCancel
     </Modal>
   );
 };
+
 
 const styles = StyleSheet.create({
   modalContainer: {
@@ -68,7 +73,6 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     textAlign: 'center',
     fontWeight: 'bold',
-    width: '45%',
   },
   cancelButton: {
     backgroundColor: '#ccc', // changed color
@@ -77,6 +81,15 @@ const styles = StyleSheet.create({
   confirmButton: {
     backgroundColor: '#ccc', // changed color
     color: 'black', // changed color
+  },
+  crossButton: {
+    alignSelf: 'flex-end',
+    borderColor: 'black',
+    borderWidth: 1,
+    borderRadius: 10,
+    backgroundColor: 'red',
+    // marginTop: 10,
+    // padding: 10,
   },
 });
 

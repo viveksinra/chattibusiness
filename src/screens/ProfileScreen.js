@@ -37,8 +37,7 @@ const ProfileScreen = () => {
     if (!result.canceled) {
     
       let localUri = result.assets[0].uri;
-      console.log(result)
-      console.log(localUri)
+      
       let filename = localUri.split('/').pop();
     
       // Infer the type of the image

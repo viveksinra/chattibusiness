@@ -7,7 +7,6 @@ import axios from 'axios';
 const handleSetData = async ({ setName, setStatus, setUserImage, setMobileNumber }) => {
 
     try {
-      console.log("getti")
       // Step 1: Retrieve profile data from local storage
       let storedProfile = await SecureStore.getItemAsync('profile');
   

@@ -41,7 +41,6 @@ const OtpCom = ({setStep,otp,setOtp,mobileNo}) => {
       // Handle the response, e.g., store the Bearer Token
       const token = response.data.token;
       // Store the token securely
-      console.log(response.data.token);
       await storeToken(token);
       await storeMobile(mobileNo);
     } catch (error) {

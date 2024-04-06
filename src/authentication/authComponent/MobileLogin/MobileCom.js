@@ -22,7 +22,6 @@ const MobileCom = ({setStep,mobileNo,setMobileNo}) => {
             mobileNo: mobileNo,
           });
           // Handle the response, e.g., show a message to the user
-          console.log(response.data);
         } catch (error) {
           // Handle errors, e.g., show an error message
           console.error(error);
