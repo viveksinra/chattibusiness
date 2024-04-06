@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity, Alert, ToastAndroid } from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity, ToastAndroid } from 'react-native';
 import { startUrl } from '../Context/ContentContext';
 import axios from 'axios';
 import * as SecureStore from 'expo-secure-store';
@@ -12,36 +12,26 @@ const OneOrderScreen = ({ route }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [modalDescription, setModalDescription] = useState('');
   const [modalInputLabel, setModalInputLabel] = useState('');
-  const [newStatus, setNewStatus] = useState({label:"",id:""});
+  const [newStatus, setNewStatus] = useState({ label: "", id: "" });
   const [comment, setComment] = useState("");
-  const [isCancel, setIsCancel] = useState(false);
   const [loading, setLoading] = useState(false);
-
-
-
 
   const getOneOrder = async () => {
     const url = `${startUrl}/chattiApi/allCommon/order/get/oneOrder/${orderId}`;
 
-    // Retrieve the authorization token from SecureStore
-    const token = await SecureStore.getItemAsync('authToken');
-
     try {
-      // Make an API call to get the chat count from the server
+      const token = await SecureStore.getItemAsync('authToken');
       const response = await axios.get(url, {
-        headers: {
-          Authorization: token,
-        },
+        headers: { Authorization: token }
       });
       if (response.data.variant === "success") {
-        const responseData = response.data; 
-        setOrder(responseData.data);
+        setOrder(response.data.data);
       } else {
-        alert("Failed to Connect to server, check your internet connection");
+        ToastAndroid.show("Failed to Connect to server, check your internet connection", ToastAndroid.SHORT);
       }
     } catch (error) {
-      console.error("Error fetching product data:", error);
-      alert("Failed to fetch product data");
+      console.error("Error fetching order data:", error);
+      ToastAndroid.show("Failed to fetch order data", ToastAndroid.SHORT);
     }
   };
 
@@ -49,123 +39,83 @@ const OneOrderScreen = ({ route }) => {
     getOneOrder();
   }, []);
 
-  useEffect(() => {
-    getOneOrder();
-  }, []);
-
-  const handleStatusChange = async (newStatusLabel, newStatusId) => {
-    // Logic for handling status change and prompting for comments
+  const handleChangeStatus = (newStatusLabel, newStatusId) => {
     setModalDescription(`Enter comments for changing status to ${newStatusLabel}`);
     setModalInputLabel('Write if any comment');
     setModalVisible(true);
-    setIsCancel(false)
-    setNewStatus({label:newStatusLabel,id:newStatusId})
+    setNewStatus({ label: newStatusLabel, id: newStatusId });
   };
 
   const handleConfirmStatusChange = async () => {
-    changeStatusApi(newStatus)
-
-    setModalVisible(false);
+    try {
+      setLoading(true);
+      const url = `${startUrl}/chattiApi/allCommon/updateOrderStatus/oneOrder/${orderId}`;
+      const token = await SecureStore.getItemAsync('authToken');
+      const response = await axios.post(url, { newStatus, comment }, { headers: { 'Content-Type': 'application/json', Authorization: token } });
+      const responseData = response.data;
+      console.log(responseData)
+      if (responseData.variant === "success") {
+        ToastAndroid.show(responseData.message, ToastAndroid.SHORT);
+        getOneOrder();
+      } else {
+        ToastAndroid.show("Failed to change order status", ToastAndroid.SHORT);
+      }
+    } catch (error) {
+      console.error('Error changing order status:', error);
+      ToastAndroid.show('Failed to change order status', ToastAndroid.SHORT);
+    } finally {
+      setLoading(false);
+      setModalVisible(false);
+    }
   };
 
   const handleCancelOrder = () => {
-    // Logic for handling cancel order
     setModalDescription('Are you sure you want to cancel this order?');
-    setModalInputLabel('Why You want to Cancel?');
-    setIsCancel(true)
-
+    setModalInputLabel('Why do you want to cancel?');
     setModalVisible(true);
+    setNewStatus({ label: "Cancelled", id: "cancelled" });
   };
 
   const handleConfirmCancelOrder = async () => {
-    console.log("Getting called")
-    // Call API to cancel order
-    // /updateOrderStatus/oneOrder/:orderId
-    let myStatus = ({label:"Cancelled",id:"cancelled"})
-
-    setNewStatus(myStatus)
-    changeStatusApi(myStatus)
-   
-
-    setModalVisible(false);
+    handleConfirmStatusChange();
   };
-
-  const changeStatusApi = async(myStatus) => {
-    setLoading(true);
-    try {
-      const url = `${startUrl}/chattiApi/allCommon/updateOrderStatus/oneOrder/${orderId}`;
-      const token = await SecureStore.getItemAsync('authToken');
-      console.log(url)
-      const response = await axios.post(
-        url,
-        { newStatus:myStatus, comment, },
-        { headers: { 'Content-Type': 'application/json', Authorization: token } }
-      );
-      const myRes = response.data;
-      if (myRes?.message) {
-        ToastAndroid.show(myRes.message, ToastAndroid.SHORT);
-      } else {
-        ToastAndroid.show("Failed to Place Order", ToastAndroid.SHORT);
-      }
-      if (myRes.variant === "success") {
-        getOneOrder()
-      }
-    } catch (error) {
-      ToastAndroid.show('Some error occurred', ToastAndroid.SHORT);
-      console.error('Error saving order:', error);
-    } finally {
-      setLoading(false);
-    }
-  }
 
   const renderRightButton = () => {
-    if (order) {
-      switch (order.orderStatus.id) {
-        case 'new':
-          return (
-            <TouchableOpacity onPress={() => handleStatusChange('Accepted','accepted')}>
-              <Text style={[styles.button, styles.acceptOrder]}>Accept Order</Text>
-            </TouchableOpacity>
-            
-          );
-        case 'accepted':
-          return (
-            <TouchableOpacity onPress={() => handleStatusChange('PickupScheduled','pickupScheduled')}>
-            <Text style={[styles.button, styles.acceptOrder]}>Pickup Scheduled</Text>
-          </TouchableOpacity>       
-          );
-        case 'pickupScheduled':
-          return (
-            <TouchableOpacity onPress={() => handleStatusChange('PickupCompleted','pickupCompleted')}>
-            <Text style={[styles.button, styles.acceptOrder]}>Pickup Completed</Text>
-          </TouchableOpacity>       
-          );
-        case 'pickupCompleted':
-          return (
-            <TouchableOpacity onPress={() => handleStatusChange('PaymentDistributed','paymentDistributed')}>
-            <Text style={[styles.button, styles.acceptOrder]}>Payment Distributed</Text>
-          </TouchableOpacity>       
-          );
-        case 'paymentDistributed':
-          return (
-            <TouchableOpacity onPress={() => handleStatusChange('AllCompleted','allCompleted')}>
-            <Text style={[styles.button, styles.acceptOrder]}>All Completed</Text>
-          </TouchableOpacity>       
-          );
-        case 'cancelled':
-          return (
-            <TouchableOpacity onPress={() => handleStatusChange('Reopen','reopen')}>
-            <Text style={[styles.button, styles.acceptOrder]}>Reopen</Text>
-          </TouchableOpacity> 
-          );
-        default:
-          return null;
-      }
-    } else {
-      return null;
+    if (!order) return null;
+
+    switch (order.orderStatus.id) {
+      case 'new':
+        return <TouchableOpacity onPress={() => handleChangeStatus('Accepted', 'accepted')}>
+          <Text style={[styles.button, styles.acceptOrder]}>Accept Order</Text>
+        </TouchableOpacity>;
+      case 'accepted':
+        return <TouchableOpacity onPress={() => handleChangeStatus('Pickup Scheduled', 'pickupScheduled')}>
+          <Text style={[styles.button, styles.acceptOrder]}>Pickup Scheduled</Text>
+        </TouchableOpacity>;
+      case 'pickupScheduled':
+        return <TouchableOpacity onPress={() => handleChangeStatus('Pickup Completed', 'pickupCompleted')}>
+          <Text style={[styles.button, styles.acceptOrder]}>Pickup Completed</Text>
+        </TouchableOpacity>;
+      case 'pickupCompleted':
+        return <TouchableOpacity onPress={() => handleChangeStatus('Payment Distributed', 'paymentDistributed')}>
+          <Text style={[styles.button, styles.acceptOrder]}>Payment Distributed</Text>
+        </TouchableOpacity>;
+      case 'paymentDistributed':
+        return <TouchableOpacity onPress={() => handleChangeStatus('All Completed', 'allCompleted')}>
+          <Text style={[styles.button, styles.acceptOrder]}>All Completed</Text>
+        </TouchableOpacity>;
+      case 'cancelled':
+        return <TouchableOpacity onPress={() => handleChangeStatus('Reopen', 'reopen')}>
+          <Text style={[styles.button, styles.acceptOrder]}>Reopen</Text>
+        </TouchableOpacity>;
+      case 'reopen':
+        return <TouchableOpacity onPress={() => handleChangeStatus('Accepted', 'accepted')}>
+          <Text style={[styles.button, styles.acceptOrder]}>Accept Order</Text>
+        </TouchableOpacity>;
+      default:
+        return null;
     }
   };
-
 
   if (!order) {
     return (
@@ -187,34 +137,33 @@ const OneOrderScreen = ({ route }) => {
           <Text style={styles.productName}>{order.product.productName}</Text>
           <Text>{order.product.quality}</Text>
           <Text>Price: ₹{order.product.price}</Text>
-      <CallMsgButton mobileNumber={order.mobileNumber}/>
-       
+          <CallMsgButton mobileNumber={order.mobileNumber} />
         </View>
       </View>
-      
+
       <View style={styles.totalContainer}>
-      
         <Text style={styles.commonText}>Weight: {order.weightInKg} kg</Text>
-          <Text style={styles.commonText}>Mobile Number: {order.mobileNumber}</Text>
-          <Text style={styles.commonText}>Order Date: {order.orderDate}</Text>
-          <Text style={styles.commonText}>Order Status: {order.orderStatus.label}</Text>
-          <Text style={styles.commonText}>Payment Method: {order.selectedPaymentMethod.label}</Text>
-    
-          <Text style={styles.calculation}>{calculationText}</Text>
+        <Text style={styles.commonText}>Mobile Number: {order.mobileNumber}</Text>
+        <Text style={styles.commonText}>Order Date: {order.orderDate}</Text>
+        <Text style={styles.commonText}>Order Status: {order.orderStatus.label}</Text>
+        <Text style={styles.commonText}>Payment Method: {order.selectedPaymentMethod.label}</Text>
+        <Text style={styles.calculation}>{calculationText}</Text>
         <Text style={styles.total}>Total Amount: ₹{totalAmount.toFixed(2)}</Text>
       </View>
 
       <View style={styles.buttonsContainer}>
-        {(order.orderStatus.id !== "cancelled")&&<TouchableOpacity onPress={handleCancelOrder}>
-          <Text style={[styles.button, styles.cancelButton]}>Cancel Order</Text>
-        </TouchableOpacity>}
+        {(order.orderStatus.id !== "cancelled" && order.orderStatus.id !== "allCompleted") &&
+          <TouchableOpacity onPress={handleCancelOrder}>
+            <Text style={[styles.button, styles.cancelButton]}>Cancel Order</Text>
+          </TouchableOpacity>}
         {renderRightButton()}
       </View>
+
       <ChangeStatusCom
         visible={modalVisible}
         description={modalDescription}
         inputLabel={modalInputLabel}
-        onConfirm={isCancel ?  handleConfirmCancelOrder : handleConfirmStatusChange}
+        onConfirm={handleConfirmStatusChange}
         onCancel={() => setModalVisible(false)}
         comment={comment}
         setComment={setComment}
@@ -251,7 +200,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     color: '#333',
     marginBottom: 5,
-    marginTop:30
+    marginTop: 30
   },
   total: {
     fontSize: 24,
@@ -262,7 +211,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     color: 'black',
-    marginTop:10
+    marginTop: 10
   },
   totalContainer: {
     alignItems: 'flex-start',
@@ -293,7 +242,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'green',
     color: 'white',
   },
-  
 });
 
 export default OneOrderScreen;
