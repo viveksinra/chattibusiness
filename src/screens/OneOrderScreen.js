@@ -173,7 +173,15 @@ const styles = StyleSheet.create({
     borderColor: '#ddd',
     marginBottom: 10,
   },
- 
+  button: {
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+  },
+  acceptOrder: {
+    backgroundColor: 'green',
+    color: 'white',
+  },
 });
 
 export default OneOrderScreen;
