@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity, ToastAndroid } from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity, ToastAndroid, ScrollView } from 'react-native';
 import { startUrl } from '../Context/ContentContext';
 import axios from 'axios';
 import * as SecureStore from 'expo-secure-store';
 import ChangeStatusCom from '../components/OneOrderCom/ChangeStatusCom';
 import OrderButtonComponent from '../components/OneOrderCom/OrderButtonComponent';
 import OrderDetailsComponent from '../components/OneOrderCom/OrderDetailsComponent';
+import OrderHistoryComp from '../components/OneOrderCom/OrderHistoryComp';
 import ProductDetailsComponent from '../components/OneOrderCom/ProductDetailsComponent';
 
 const OneOrderScreen = ({ route }) => {
@@ -129,15 +130,12 @@ const OneOrderScreen = ({ route }) => {
 
   const pricePerKg = order.product.price / 100;
   const totalAmount = (pricePerKg * parseFloat(order.weightInKg)) || 0;
-  const calculationText = order.weightInKg ? `₹${pricePerKg.toFixed(2)} per kg x ${order.weightInKg} kg` : '';
 
   return (
-    <>
+    <ScrollView>
       <View style={styles.container}>
         <ProductDetailsComponent product={order.product} />
       </View>
-
-      <OrderDetailsComponent order={order} totalAmount={totalAmount} />
 
       <OrderButtonComponent
         order={order}
@@ -145,7 +143,11 @@ const OneOrderScreen = ({ route }) => {
         renderRightButton={renderRightButton}
       />
 
-      <ChangeStatusCom
+      <OrderDetailsComponent order={order} totalAmount={totalAmount} />
+      <OrderHistoryComp order={order}/>
+
+ 
+  <ChangeStatusCom
         visible={modalVisible}
         description={modalDescription}
         inputLabel={modalInputLabel}
@@ -154,7 +156,8 @@ const OneOrderScreen = ({ route }) => {
         comment={comment}
         setComment={setComment}
       />
-    </>
+      
+    </ScrollView>
   );
 };
 

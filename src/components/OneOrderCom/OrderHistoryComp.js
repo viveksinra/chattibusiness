@@ -3,14 +3,14 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import AccordionItem from '../../components/General/AccordionItem';
 
 
-const OrderDetailsComponent = ({ order, totalAmount }) => {
+const OrderHistoryComp = ({ order }) => {
   const pricePerKg = order.product.price / 100;
   const calculationText = order.weightInKg ? `₹${pricePerKg.toFixed(2)} per kg x ${order.weightInKg} kg` : '';
 
   return (
     <AccordionItem
-      title="Order Details"
-      defaultState={true}
+      title="Order History"
+      defaultState={false}
       content={(
         <View style={styles.container}>
           <Text style={styles.commonText}>Weight: {order.weightInKg} kg</Text>
@@ -19,7 +19,6 @@ const OrderDetailsComponent = ({ order, totalAmount }) => {
           <Text style={styles.commonText}>Order Status: {order.orderStatus.label}</Text>
           <Text style={styles.commonText}>Payment Method: {order.selectedPaymentMethod.label}</Text>
           <Text style={styles.calculation}>{calculationText}</Text>
-          <Text style={styles.total}>Total Amount: ₹{totalAmount.toFixed(2)}</Text>
         </View>
       )}
     />
@@ -52,4 +51,4 @@ const styles = StyleSheet.create({
 
 });
 
-export default OrderDetailsComponent;
+export default OrderHistoryComp;
