@@ -1,54 +1,43 @@
-import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import React from 'react';
+import { View, Text, StyleSheet } from 'react-native';
 import AccordionItem from '../../components/General/AccordionItem';
 
-
 const OrderHistoryComp = ({ order }) => {
-  const pricePerKg = order.product.price / 100;
-  const calculationText = order.weightInKg ? `₹${pricePerKg.toFixed(2)} per kg x ${order.weightInKg} kg` : '';
-
   return (
     <AccordionItem
-      title="Order History"
-      defaultState={false}
-      content={(
-        <View style={styles.container}>
-          <Text style={styles.commonText}>Weight: {order.weightInKg} kg</Text>
-          <Text style={styles.commonText}>Mobile Number: {order.mobileNumber}</Text>
-          <Text style={styles.commonText}>Order Date: {order.orderDate}</Text>
-          <Text style={styles.commonText}>Order Status: {order.orderStatus.label}</Text>
-          <Text style={styles.commonText}>Payment Method: {order.selectedPaymentMethod.label}</Text>
-          <Text style={styles.calculation}>{calculationText}</Text>
+    title="Order Details"
+    defaultState={true}
+    content={(
+    <View style={styles.container}>
+      {order.history.map((items, index) => 
+       { 
+       return( items.map((item, index)=> (
+<View key={item._id} style={styles.historyItem}>
+          <Text style={styles.historyText}>{item.fieldName}: Changed from {item.history} to {item.newP}</Text>
+          <Text style={styles.historyText}>Comment: {item.comment}</Text>
         </View>
+       )))}
       )}
-    />
+    </View>)}
+     />
   );
 };
 
-const styles = StyleSheet.create({ 
+const styles = StyleSheet.create({
   container: {
-    alignItems: 'flex-start',
-    marginLeft: 20,
-    marginBottom: 20,
+    flex: 1,
+    padding: 20,
   },
-  calculation: {
-    fontSize: 24,
-    color: '#333',
-    marginBottom: 5,
-    marginTop: 30
+  historyItem: {
+    backgroundColor: '#f8f8f8',
+    borderRadius: 5,
+    padding: 10,
+    marginBottom: 10,
   },
-  total: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#2ecc71',
-  },
-  commonText: {
-    fontSize: 18,
-    fontWeight: 'bold',
+  historyText: {
+    fontSize: 16,
     color: 'black',
-    marginTop: 10
   },
-
 });
 
 export default OrderHistoryComp;
