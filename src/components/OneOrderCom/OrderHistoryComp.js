@@ -13,7 +13,7 @@ const OrderHistoryComp = ({ order }) => {
        { 
        return( items.map((item, index)=> (
 <View key={item._id} style={styles.historyItem}>
-          <Text style={styles.historyText}>{item.fieldName}: Changed from {item.history} to {item.newP}</Text>
+          <Text style={styles.historyText}>{item.fieldName}: Changed from {item.oldP} to {item.newP}</Text>
           <Text style={styles.historyText}>Comment: {item.comment}</Text>
         </View>
        )))}
