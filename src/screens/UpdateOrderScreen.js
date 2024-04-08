@@ -12,9 +12,13 @@ import { useTranslation } from 'react-i18next';
 
 const UpdateOrderScreen = ({ route }) => {
   const { t } = useTranslation();
+  const { product,order } = route.params;
+
+  // console.log({ product })
+
  
   const [mobileNumber, setMobileNumber] = useState("");
-  const { product } = route.params;
+ 
   const [currentStep, setCurrentStep] = useState(1);
   const [weight, setWeight] = useState('');
   const [location, setLocation] = useState(null);

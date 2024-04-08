@@ -5,6 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 
 
 const OrderDetailsComponent = ({ order, totalAmount }) => {
+  
   const pricePerKg = order.product.price / 100;
   const calculationText = order.weightInKg ? `₹${pricePerKg.toFixed(2)} per kg x ${order.weightInKg} kg` : '';
   const navigation = useNavigation();
