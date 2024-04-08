@@ -6,7 +6,7 @@ import MainTabNavigator from './MainTabNavigator';
 import NotImplementedScreen from '../screens/NotImplementedScreen';
 import { useTranslation } from 'react-i18next';
 import ProfileScreen from '../screens/ProfileScreen';
-import OrderProcessScreen from '../screens/OrderProcessScreen';
+import UpdateOrderScreen from '../screens/UpdateOrderScreen';
 import OneOrderScreen from '../screens/OneOrderScreen';
 
 
@@ -28,8 +28,8 @@ const AuthenticatedNavigator = () => {
         options={{ title: 'Profile' }}
       />
       <Stack.Screen
-        name="OrderProcessScreen"
-        component={OrderProcessScreen}
+        name="UpdateOrderScreen"
+        component={UpdateOrderScreen}
         options={{ title: 'Order Process' }}
       />
       <Stack.Screen

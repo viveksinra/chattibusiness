@@ -10,7 +10,7 @@ import { useNavigation } from '@react-navigation/native';
 import GeneralLoading from '../components/General/GeneralLoading';
 import { useTranslation } from 'react-i18next';
 
-const OrderProcessScreen = ({ route }) => {
+const UpdateOrderScreen = ({ route }) => {
   const { t } = useTranslation();
  
   const [mobileNumber, setMobileNumber] = useState("");
@@ -206,4 +206,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default OrderProcessScreen;
+export default UpdateOrderScreen;

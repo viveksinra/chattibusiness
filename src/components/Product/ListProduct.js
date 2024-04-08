@@ -16,8 +16,7 @@ const ListProduct = ({ product,getProduct }) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [newPrice, setNewPrice] = useState(product.price);
 
-  const sendToOrderProcess = () => {
-    navigation.navigate('OrderProcessScreen', { product: product });
+  const showPriceHistory = () => {
   };
 
   const handleUpdate = async() => {
@@ -55,7 +54,7 @@ const ListProduct = ({ product,getProduct }) => {
   };
 
   return (
-    <TouchableOpacity style={styles.container} onPress={() => sendToOrderProcess()}>
+    <TouchableOpacity style={styles.container} onPress={() => showPriceHistory()}>
       <View style={styles.imageContainer}>
         {/* Product Image */}
         <Image

@@ -1,12 +1,17 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import AccordionItem from '../../components/General/AccordionItem';
+import { useNavigation } from '@react-navigation/native';
 
 
 const OrderDetailsComponent = ({ order, totalAmount }) => {
   const pricePerKg = order.product.price / 100;
   const calculationText = order.weightInKg ? `₹${pricePerKg.toFixed(2)} per kg x ${order.weightInKg} kg` : '';
+  const navigation = useNavigation();
+  const goToUpdateOrder = () => {
+  navigation.navigate('UpdateOrderScreen', { product:order.product, order: order });
 
+  };
   return (
     <AccordionItem
       title="Order Details"
@@ -20,6 +25,10 @@ const OrderDetailsComponent = ({ order, totalAmount }) => {
           <Text style={styles.commonText}>Payment Method: {order.selectedPaymentMethod.label}</Text>
           <Text style={styles.calculation}>{calculationText}</Text>
           <Text style={styles.total}>Total Amount: ₹{totalAmount.toFixed(2)}</Text>
+          {(order.orderStatus.id !== "cancelled" && order.orderStatus.id !== "allCompleted") &&
+        <TouchableOpacity onPress={goToUpdateOrder}>
+          <Text style={[styles.button, styles.updateButton]}>Update Order</Text>
+        </TouchableOpacity>}
         </View>
       )}
     />
@@ -48,6 +57,15 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: 'black',
     marginTop: 10
+  },
+  button: {
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+  },
+  updateButton: {
+    backgroundColor: 'blue',
+    color: 'white',
   },
 
 });
