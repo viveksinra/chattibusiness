@@ -11,7 +11,6 @@ const ProductDetailsComponent = ({ product }) => {
       <View style={styles.details}>
         <Text style={styles.productName}>{product.productName}</Text>
         <Text>{product.quality}</Text>
-        <Text>Price: ₹{product.price}</Text>
         <CallMsgButton mobileNumber={product.mobileNumber} />
       </View>
     </>

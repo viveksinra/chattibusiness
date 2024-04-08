@@ -14,29 +14,31 @@ const UpdateOrderScreen = ({ route }) => {
   const { t } = useTranslation();
   const { product,order } = route.params;
 
-  // console.log({ product })
-
+  console.log({ order })
+  let weightInKg = ""
+  if(order.weightInKg){
+ weightInKg = (order.weightInKg).toString()}
  
-  const [mobileNumber, setMobileNumber] = useState("");
+  const [mobileNumber, setMobileNumber] = useState(order.mobileNumber);
  
+  const [orderPrice, setOrderPrice] = useState()
   const [currentStep, setCurrentStep] = useState(1);
-  const [weight, setWeight] = useState('');
-  const [location, setLocation] = useState(null);
-  const [address, setAddress] = useState({});
-  const [flat, setFlat] = useState("");
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState({ label: "", id: "" });
-  const [upiId, setUpiId] = useState('');
-  const [accountNumber, setAccountNumber] = useState('');
-  const [accountHolderName, setAccountHolderName] = useState('');
-  const [ifsc, setIfsc] = useState('');
+  const [weight, setWeight] = useState(weightInKg);
+  const [location, setLocation] = useState(order.location);
+  const [address, setAddress] = useState(order.address);
+  const [flat, setFlat] = useState(order.flat);
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(order.selectedPaymentMethod);
+  const [upiId, setUpiId] = useState(order.upiId);
+  const [accountNumber, setAccountNumber] = useState(order.accountNumber);
+  const [accountHolderName, setAccountHolderName] = useState(order.accountHolderName);
+  const [ifsc, setIfsc] = useState(order.ifsc);
   const navigation = useNavigation();
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const MobileNo = await SecureStore.getItemAsync('mobileNo');
-        setMobileNumber(MobileNo);
+     
       } catch (error) {
         console.error('Error fetching mobile number:', error);
       }
@@ -87,7 +89,7 @@ const UpdateOrderScreen = ({ route }) => {
   const renderStepContent = () => {
     switch (currentStep) {
       case 1:
-        return <OpScreen1 product={product} weight={weight} setWeight={setWeight} mobileNumber={mobileNumber} setMobileNumber={setMobileNumber} />;
+        return <OpScreen1 order={order} product={product} weight={weight} setWeight={setWeight} mobileNumber={mobileNumber} setMobileNumber={setMobileNumber} />;
       case 2:
         return <OpScreen2 product={product} location={location} setLocation={setLocation} address={address} setAddress={setAddress} flat={flat} setFlat={setFlat} />;
       case 3:

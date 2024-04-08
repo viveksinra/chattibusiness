@@ -13,7 +13,7 @@ const OrderListItem = ({ order }) => {
 
  
 
-  const pricePerKg = order.product.price / 100;
+  const pricePerKg = order.orderPrice / 100;
   const totalAmount = (pricePerKg * parseFloat(order.weightInKg)) || 0;
   const calculationText =  `${pricePerKg.toFixed(2)} x ${order.weightInKg} kg`;
 
