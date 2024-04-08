@@ -70,7 +70,7 @@ useEffect(() => {
     {t('secMain.three')}
          </Text>
 {allProduct.map(product => (
-  <ListProduct key={product._id} product={product}/>
+  <ListProduct key={product._id} product={product} getProduct={getProduct}/>
 ))}
 
 

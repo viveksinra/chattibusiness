@@ -1,26 +1,57 @@
 import React, { useState } from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity, Pressable } from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity, Pressable, ToastAndroid } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 import { MaterialIcons } from '@expo/vector-icons';
 import PriceUpdateModal from './PriceUpdateModal';
+import { startUrl } from '../../Context/ContentContext';
+import axios from 'axios';
+import * as SecureStore from 'expo-secure-store';
 
-const ListProduct = ({ product }) => {
+const ListProduct = ({ product,getProduct }) => {
   const { t } = useTranslation();
   const navigation = useNavigation();
+  const [loading, setLoading] = useState(false);
 
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [newPrice, setNewPrice] = useState('');
+  const [newPrice, setNewPrice] = useState(product.price);
 
   const sendToOrderProcess = () => {
     navigation.navigate('OrderProcessScreen', { product: product });
   };
 
-  const handleUpdate = (price) => {
+  const handleUpdate = async() => {
     // Call your API here to update the price with axios
     // After updating the price, you can close the modal
+    if (!newPrice || parseFloat(newPrice) <= 0 || isNaN(parseFloat(newPrice))) {
+      setErrorMessage('Price must be a valid number greater than zero');
+      return;
+    }
+    await handleUpdatePrice()
     setIsModalVisible(false);
-    setNewPrice('');
+  };
+
+  const handleUpdatePrice = async () => {
+    try {
+      setLoading(true);
+      const url = `${startUrl}/chattiApi/allCommon/updatePrice/oneProduct/${product._id}`;
+      const token = await SecureStore.getItemAsync('authToken');
+      const response = await axios.post(url, { newPrice:newPrice }, { headers: { 'Content-Type': 'application/json', Authorization: token } });
+      const responseData = response.data;
+      console.log(responseData)
+      if (responseData.variant === "success") {
+        ToastAndroid.show(responseData.message, ToastAndroid.SHORT);
+        getProduct()
+      } else {
+        ToastAndroid.show("Failed to change order status", ToastAndroid.SHORT);
+      }
+    } catch (error) {
+      console.error('Error changing order status:', error);
+      ToastAndroid.show('Failed to change order status', ToastAndroid.SHORT);
+    } finally {
+      setLoading(false);
+      setIsModalVisible(false);
+    }
   };
 
   return (
@@ -48,8 +79,10 @@ const ListProduct = ({ product }) => {
       <PriceUpdateModal
         isVisible={isModalVisible}
         onClose={() => setIsModalVisible(false)}
-        onUpdate={handleUpdate}
+        handleUpdate={handleUpdate}
         currentPrice={product.price}
+        newPrice={newPrice}
+        setNewPrice={setNewPrice}
       />
     </TouchableOpacity>
   );

@@ -1,27 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, View, Text, TextInput, StyleSheet, Pressable } from 'react-native';
 
-const PriceUpdateModal = ({ isVisible, currentPrice, onClose, onUpdate }) => {
-  const [newPrice, setNewPrice] = useState(currentPrice);
+const PriceUpdateModal = ({ isVisible, currentPrice, onClose, handleUpdate, newPrice, setNewPrice }) => {
+
   const [errorMessage, setErrorMessage] = useState('');
   const [priceDiff, setPriceDiff] = useState(0);
-
-  useEffect(() => {
-    setNewPrice(currentPrice);
-  }, [currentPrice]);
-
-  const handleUpdate = () => {
-    if (!newPrice || parseFloat(newPrice) <= 0 || isNaN(parseFloat(newPrice))) {
-      setErrorMessage('Price must be a valid number greater than zero');
-      return;
-    }
-
-    const diff = parseFloat(newPrice) - +currentPrice;
-    setPriceDiff(diff);
-    onUpdate(parseFloat(newPrice));
-    setNewPrice(currentPrice);
-    setErrorMessage('');
-  };
 
   return (
     <Modal
