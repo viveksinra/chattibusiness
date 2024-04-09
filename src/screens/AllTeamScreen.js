@@ -129,7 +129,7 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   selectedTab: {
-    backgroundColor: 'green',
+    backgroundColor: '#086096',
   },
   tabText: {
     fontWeight: 'bold',

@@ -3,12 +3,13 @@ import { View, Text, Image, StyleSheet, TouchableOpacity, Linking } from 'react-
 import { FontAwesome } from '@expo/vector-icons'; // Import FontAwesome icons
 import { useNavigation } from '@react-navigation/native';
 import CallMsgButton from './../General/CallMsgButton';
+import ChangeRoleButoon from './ChangeRoleButton';
 
 const AllTeamItem = ({ team }) => {
   const navigation = useNavigation();
 
   function handleOneOrder() {
-    navigation.navigate('OneOrderScreen', { userId: team._id });
+    // navigation.navigate('OneOrderScreen', { userId: team._id });
   }
 
   return (
@@ -21,6 +22,7 @@ const AllTeamItem = ({ team }) => {
         {/* <Text style={styles.status}>Status: {team.status}</Text> */}
         <View style={styles.totalContainer}>
           <Text style={styles.calculation}>Role: {team.role.label}</Text>
+          <ChangeRoleButoon team={team} />
           {/* <Text style={styles.total}>: ₹{totalAmount.toFixed(2)}</Text> */}
         </View>
         <CallMsgButton mobileNumber={team.mobileNumber}/>
