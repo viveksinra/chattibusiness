@@ -5,7 +5,7 @@ import AccordionItem from '../../components/General/AccordionItem';
 const OrderHistoryComp = ({ order }) => {
   return (
     <AccordionItem
-    title="Order Details"
+    title="Order History"
     defaultState={true}
     content={(
     <View style={styles.container}>
@@ -18,6 +18,9 @@ const OrderHistoryComp = ({ order }) => {
         </View>
        )))}
       )}
+      {(order.history.length<= 0) && (<>
+    <Text>No History</Text>  
+    </>)}
     </View>)}
      />
   );

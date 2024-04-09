@@ -55,7 +55,7 @@ const UpdateOrderScreen = ({ route }) => {
   const updateOrderFun = async () => {
     setLoading(true);
     try {
-      const url = `${startUrl}/chattiApi/allCommon/order/updateOrder/${order_id}`;
+      const url = `${startUrl}/chattiApi/allCommon/order/updateOrder/${order._id}`;
       const token = await SecureStore.getItemAsync('authToken');
       const response = await axios.post(
         url,
