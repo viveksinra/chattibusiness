@@ -13,8 +13,6 @@ import { useTranslation } from 'react-i18next';
 const UpdateOrderScreen = ({ route }) => {
   const { t } = useTranslation();
   const { product,order } = route.params;
-
-  console.log({ order })
   let weightInKg = ""
   if(order.weightInKg){
  weightInKg = (order.weightInKg).toString()}
@@ -24,9 +22,9 @@ const UpdateOrderScreen = ({ route }) => {
   const [orderPrice, setOrderPrice] = useState()
   const [currentStep, setCurrentStep] = useState(1);
   const [weight, setWeight] = useState(weightInKg);
-  const [location, setLocation] = useState(order.location);
-  const [address, setAddress] = useState(order.address);
-  const [flat, setFlat] = useState(order.flat);
+  const [location, setLocation] = useState(order.location? order.location:null);
+  const [address, setAddress] = useState(order.address? order.address:{});
+  const [flat, setFlat] = useState(order.flat?order.flat:"");
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(order.selectedPaymentMethod);
   const [upiId, setUpiId] = useState(order.upiId);
   const [accountNumber, setAccountNumber] = useState(order.accountNumber);
@@ -54,10 +52,10 @@ const UpdateOrderScreen = ({ route }) => {
     setCurrentStep(currentStep - 1);
   };
 
-  const SaveOrderFunction = async () => {
+  const updateOrderFun = async () => {
     setLoading(true);
     try {
-      const url = `${startUrl}/chattiApi/allCommon/order/saveOrder`;
+      const url = `${startUrl}/chattiApi/allCommon/order/updateOrder/${order_id}`;
       const token = await SecureStore.getItemAsync('authToken');
       const response = await axios.post(
         url,
@@ -83,7 +81,7 @@ const UpdateOrderScreen = ({ route }) => {
 
   const handleFinish = () => {
     setLoading(true);
-    SaveOrderFunction();
+    updateOrderFun();
   };
 
   const renderStepContent = () => {

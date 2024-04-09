@@ -81,7 +81,7 @@ const OpScreen2 = ({location, setLocation,address, setAddress,flat, setFlat}) =>
                <Label text={t('opScreen2.six')} />
              <TextInput style={styles.input} placeholder={t('opScreen2.six')} value={address.postalCode} onChangeText={text => setAddress({ ...address, postalCode: text })} />
             </View>
-            {location && <Text style={styles.coordinates}>Lat: {location.latitude.toFixed(3)}, Long: {location.longitude.toFixed(3)}</Text>}
+            {location && <Text style={styles.coordinates}>Lat: {location.latitude?.toFixed(3)}, Long: {location.longitude?.toFixed(3)}</Text>}
           </>
         ) : (
           <View style={styles.errorContainer}>
