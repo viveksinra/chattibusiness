@@ -1,9 +1,16 @@
 import React, { useState } from 'react';
-import { View, Text, Modal, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, Modal, TouchableOpacity, StyleSheet, ToastAndroid, Alert } from 'react-native';
+import * as SecureStore from 'expo-secure-store';
+import axios from 'axios';
+import { startUrl } from '../../Context/ContentContext';
+
 
 const ChangeRoleButton = ({team}) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedRole, setSelectedRole] = useState(team.role);
+  const [allHead, setAllHead] = useState([]);
+  const [selectedHead, setSelectedHead] = useState();
+
 
   const roles = [
     { label: 'Core', id: 'core' },
@@ -15,6 +22,73 @@ const ChangeRoleButton = ({team}) => {
 
   const handleRoleChange = (role) => {
     setSelectedRole(role);
+    if (role.id === 'business' || role.id === 'operative' || role.id === 'collaborator') {
+      GetAndSetAllHead(role);
+    } else {
+      setAllHead([]);
+    }
+  };
+
+  const GetAndSetAllHead = async (role) => {
+    let end = "core"
+    if(role.id === "operative"){
+        end === "buisness"
+    }else if(role.id === "collaborator"){
+        end === "operative"
+    }
+    try {
+      let url = `${startUrl}/chattiApi/allCommon/allTeam/getByRole/user`;
+      let token = await SecureStore.getItemAsync('authToken');
+      const response = await axios.get(
+        url,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: token,
+          },
+        }
+      );
+      let myRes = response.data;
+      if (myRes.variant === 'success') {
+        setAllHead(myRes.data);
+        console.log(myRes.data)
+        ToastAndroid.show('Data Loaded.. ', ToastAndroid.SHORT);
+      } else {
+        ToastAndroid.show('Some error occurred ', ToastAndroid.SHORT);
+      }
+    } catch (error) {
+      ToastAndroid.show('Some error occurred ', ToastAndroid.SHORT);
+      console.log('Some error occurred while sending or setting the message' + error);
+    }
+  };
+  const updateRoleApi = async () => {
+
+    try {
+      let url = `${startUrl}/chattiApi/allCommon/oneUser/updateRole/${team._id}`;
+      console.log(url)
+      let token = await SecureStore.getItemAsync('authToken');
+      const response = await axios.post(
+        url,
+        {selectedHead,selectedRole},
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: token,
+          },
+        }
+      );
+      let myRes = response.data;
+      if (myRes.variant === 'success') {
+       
+        ToastAndroid.show('Updated.. ', ToastAndroid.SHORT);
+      } else {
+        ToastAndroid.show('Some error occurred ', ToastAndroid.SHORT);
+      }
+    } catch (error) {
+      ToastAndroid.show('Some error occurred ', ToastAndroid.SHORT);
+      console.log('Some error occurred while sending or setting the message' + error);
+    }
+    setModalVisible(false);
   };
 
   return (
@@ -53,11 +127,42 @@ const ChangeRoleButton = ({team}) => {
             ))}
           </View>
 
+          {allHead && (
+            <View style={styles.rolesContainer}>
+              <Text style={styles.modalTitle}>Select Head:</Text>
+              {allHead.map((head) => (
+                <TouchableOpacity
+                  key={head.id}
+                  onPress={() => setSelectedHead(head)}
+                  style={[
+                    styles.roleButton,
+                    selectedHead && selectedHead._id === head._id && styles.selectedRoleButton,
+                  ]}
+                >
+                  <Text style={[styles.roleButtonText, selectedHead && selectedHead._id === head.id && styles.selectedRoleButtonText]}>{head.name}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          )}
+
           <View style={styles.buttonsContainer}>
             <TouchableOpacity style={styles.cancelButton} onPress={() => setModalVisible(false)}>
               <Text style={styles.buttonText}>Cancel</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.updateButton} onPress={() => setModalVisible(false)}>
+            <TouchableOpacity
+              style={[
+                styles.updateButton,
+                !selectedRole && { backgroundColor: 'lightgray' }, // Disable button if no role is selected
+              ]}
+              onPress={() => {
+                if (selectedRole) {
+                    updateRoleApi()
+                }else{
+                    Alert("Select a role")
+                }
+              }}
+              disabled={!selectedRole} // Disable button if no role is selected
+            >
               <Text style={styles.buttonText}>Update</Text>
             </TouchableOpacity>
           </View>

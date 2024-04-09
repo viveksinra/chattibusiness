@@ -16,6 +16,7 @@ const AllTeamScreen = () => {
   const [businessTeam, setBusinessTeam] = useState([]);
   const [operativeTeam, setOperativeTeam] = useState([]);
   const [collaboratorTeam, setCollaboratorTeam] = useState([]);
+  const [userTeam, setUserTeam] = useState([]);
   const [selectedTab, setSelectedTab] = useState('user'); // Default to 'user'
 
   const { t } = useTranslation();
@@ -36,6 +37,9 @@ const AllTeamScreen = () => {
       );
       let myRes = response.data;
       if (myRes.variant === 'success') {
+        if (selectedTab === "core") {
+          setCoreTeam(myRes.data);
+        } else
         if (selectedTab === "business") {
           setBusinessTeam(myRes.data);
         } else if (selectedTab === "operative") {
@@ -43,7 +47,7 @@ const AllTeamScreen = () => {
         } else if (selectedTab === "collaborator") {
           setCollaboratorTeam(myRes.data);
         } else {
-          setCoreTeam(myRes.data);
+          setUserTeam(myRes.data);
         }
         ToastAndroid.show('Data Loaded.. ', ToastAndroid.SHORT);
       } else {
@@ -93,12 +97,13 @@ const AllTeamScreen = () => {
         </View>
         {(selectedTab === 'user' && coreTeam.length === 0) ||
          (selectedTab === 'business' && businessTeam.length === 0) ||
+         (selectedTab === 'core' && coreTeam.length === 0) ||
          (selectedTab === 'collaborator' && collaboratorTeam.length === 0) ||
          (selectedTab === 'operative' && operativeTeam.length === 0) ? (
           <NoOrderHistory />
         ) : (
           <FlatList
-            data={selectedTab === 'user' ? coreTeam : selectedTab === 'collaborator' ? collaboratorTeam : selectedTab === 'business' ? businessTeam : operativeTeam}
+            data={selectedTab === 'user' ? userTeam : selectedTab === 'core' ? coreTeam : selectedTab === 'collaborator' ? collaboratorTeam : selectedTab === 'business' ? businessTeam : operativeTeam}
             keyExtractor={(item, index) => index.toString()}
             renderItem={({ item }) => <AllTeamItem team={item} />}
           />
