@@ -4,30 +4,26 @@ import { FontAwesome } from '@expo/vector-icons'; // Import FontAwesome icons
 import { useNavigation } from '@react-navigation/native';
 import CallMsgButton from './../General/CallMsgButton';
 
-const OrderListItem = ({ order }) => {
+const AllTeamItem = ({ team }) => {
   const navigation = useNavigation();
 
   function handleOneOrder() {
-    navigation.navigate('OneOrderScreen', { orderId: order._id });
+    navigation.navigate('OneOrderScreen', { userId: team._id });
   }
-
-  const pricePerKg = order.currentPrice / 100;
-  const totalAmount = (pricePerKg * parseFloat(order.weightInKg)) || 0;
-  const calculationText =  `${pricePerKg.toFixed(2)} x ${order.weightInKg} kg`;
 
   return (
     <TouchableOpacity style={styles.container} onPress={handleOneOrder}>
-      <Image source={{ uri: order.product.productImage }} style={styles.image} />
+      <Image source={{ uri: team.userImage }} style={styles.image} />
       <View style={styles.details}>
-        <Text style={styles.date}>Date: {order.orderDate}</Text>
-        <Text style={styles.productName}>{order.product.productName}</Text>
-        <Text style={styles.mobile}>Mobile: {order.mobileNumber}</Text>
-        <Text style={styles.status}>Status: {order.orderStatus.label}</Text>
+        <Text style={styles.date}>Date: {team.date}</Text>
+        <Text style={styles.teamName}>Name: {team.name}</Text>
+        <Text style={styles.mobile}>Mobile: {team.mobileNumber}</Text>
+        {/* <Text style={styles.status}>Status: {team.status}</Text> */}
         <View style={styles.totalContainer}>
-          <Text style={styles.calculation}>{calculationText}</Text>
-          <Text style={styles.total}>: ₹{totalAmount.toFixed(2)}</Text>
+          <Text style={styles.calculation}>Role: {team.role.label}</Text>
+          {/* <Text style={styles.total}>: ₹{totalAmount.toFixed(2)}</Text> */}
         </View>
-        <CallMsgButton mobileNumber={order.mobileNumber}/>
+        <CallMsgButton mobileNumber={team.mobileNumber}/>
       </View>
     </TouchableOpacity>
   );
@@ -53,7 +49,7 @@ const styles = StyleSheet.create({
   details: {
     flex: 1,
   },
-  productName: {
+  teamName: {
     fontSize: 18,
     fontWeight: 'bold',
   },
@@ -85,4 +81,4 @@ const styles = StyleSheet.create({
   
 });
 
-export default OrderListItem;
+export default AllTeamItem;

@@ -1,8 +1,9 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
-import { Ionicons, Entypo } from "@expo/vector-icons";
+import { Ionicons, AntDesign } from "@expo/vector-icons";
 import HomeScreens from "../screens/HomeScreens";
 import AllOrdersScreen from "../screens/AllOrdersScreen";
+import AllTeamScreen from "../screens/AllTeamScreen";
 import SettingScreen from "../screens/SettingScreen";
 import {useTranslation} from 'react-i18next';
 import LanguageSelector from "../components/SettingComponent/LanguageSelector";
@@ -53,6 +54,18 @@ const MainTabNavigator = () => {
           headerTitle:t('tab.orders'),
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="albums-outline" size={size} color={color} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Teams"
+        component={AllTeamScreen}
+        options={{
+          tabBarLabel: t('tab.teams'),
+          headerTitle:t('tab.teams'),
+          tabBarIcon: ({ color, size }) => (
+  
+            <AntDesign name="team" size={size} color={color} />
           ),
         }}
       />
