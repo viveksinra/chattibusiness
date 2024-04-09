@@ -11,9 +11,7 @@ const OrderListItem = ({ order }) => {
     navigation.navigate('OneOrderScreen', { orderId: order._id });
   }
 
- 
-
-  const pricePerKg = order.orderPrice / 100;
+  const pricePerKg = order.currentPrice / 100;
   const totalAmount = (pricePerKg * parseFloat(order.weightInKg)) || 0;
   const calculationText =  `${pricePerKg.toFixed(2)} x ${order.weightInKg} kg`;
 
