@@ -14,7 +14,6 @@ const OrderListItem = ({ order }) => {
   const pricePerKg = order.currentPrice / 100;
   const totalAmount = (pricePerKg * parseFloat(order.weightInKg)) || 0;
   const calculationText =  `${pricePerKg.toFixed(2)} x ${order.weightInKg} kg`;
-
   return (
     <TouchableOpacity style={styles.container} onPress={handleOneOrder}>
       <Image source={{ uri: order.product.productImage }} style={styles.image} />

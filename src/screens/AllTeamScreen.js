@@ -37,7 +37,9 @@ const AllTeamScreen = () => {
       );
       let myRes = response.data;
       if (myRes.variant === 'success') {
-        if (selectedTab === "core") {
+        if (selectedTab === "user") {
+          setUserTeam(myRes.data);
+        } else  if (selectedTab === "core") {
           setCoreTeam(myRes.data);
         } else
         if (selectedTab === "business") {
@@ -88,7 +90,6 @@ const AllTeamScreen = () => {
       </ScrollView>
     );
   };
-
   return (
     <ImageBackground source={image} style={styles.backgroundImage}>
       <View style={styles.container}>

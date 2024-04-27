@@ -11,9 +11,8 @@ const AllTeamItem = ({ team }) => {
   function handleOneOrder() {
     // navigation.navigate('OneOrderScreen', { userId: team._id });
   }
-
   return (
-    <TouchableOpacity style={styles.container} onPress={handleOneOrder}>
+    <TouchableOpacity key={team._id} style={styles.container} onPress={handleOneOrder}>
       <Image source={{ uri: team.userImage }} style={styles.image} />
       <View style={styles.details}>
         <Text style={styles.date}>Date: {team.date}</Text>

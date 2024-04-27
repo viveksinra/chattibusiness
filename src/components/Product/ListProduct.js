@@ -41,7 +41,10 @@ const ListProduct = ({ product,getProduct }) => {
       if (responseData.variant === "success") {
         ToastAndroid.show(responseData.message, ToastAndroid.SHORT);
         getProduct()
-      } else {
+      } else if (responseData.variant === "error") {
+        ToastAndroid.show(responseData.message, ToastAndroid.SHORT);
+        setNewPrice(product.price)
+      } else{
         ToastAndroid.show("Failed to change order status", ToastAndroid.SHORT);
       }
     } catch (error) {
