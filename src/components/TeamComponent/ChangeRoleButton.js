@@ -5,7 +5,7 @@ import axios from 'axios';
 import { startUrl } from '../../Context/ContentContext';
 
 
-const ChangeRoleButton = ({team}) => {
+const ChangeRoleButton = ({team,fetchData}) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedRole, setSelectedRole] = useState(team.role);
   const [allHead, setAllHead] = useState([]);
@@ -31,11 +31,12 @@ const ChangeRoleButton = ({team}) => {
 
   const GetAndSetAllHead = async (role) => {
     let end = "core"
-    if(role.id === "operative"){
-        end === "buisness"
-    }else if(role.id === "collaborator"){
-        end === "operative"
+    if(role.id == "operative"){
+        end = "business"
+    }else if(role.id == "collaborator"){
+        end = "operative"
     }
+
     try {
       let url = `${startUrl}/chattiApi/allCommon/allTeam/getByRole/${end}`;
       let token = await SecureStore.getItemAsync('authToken');
@@ -49,7 +50,6 @@ const ChangeRoleButton = ({team}) => {
         }
       );
       let myRes = response.data;
-      console.log({data:myRes.data})
       if (myRes.variant === 'success') {
         setAllHead(myRes.data);
         ToastAndroid.show('Data Loaded.. ', ToastAndroid.SHORT);
@@ -78,7 +78,7 @@ const ChangeRoleButton = ({team}) => {
       );
       let myRes = response.data;
       if (myRes.variant === 'success') {
-       
+        fetchData()
         ToastAndroid.show('Updated.. ', ToastAndroid.SHORT);
       } else {
         ToastAndroid.show('Some error occurred ', ToastAndroid.SHORT);

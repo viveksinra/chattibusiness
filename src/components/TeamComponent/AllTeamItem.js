@@ -5,7 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 import CallMsgButton from './../General/CallMsgButton';
 import ChangeRoleButoon from './ChangeRoleButton';
 
-const AllTeamItem = ({ team }) => {
+const AllTeamItem = ({ team,fetchData }) => {
   const navigation = useNavigation();
 
   function handleOneOrder() {
@@ -21,7 +21,7 @@ const AllTeamItem = ({ team }) => {
         {/* <Text style={styles.status}>Status: {team.status}</Text> */}
         <View style={styles.totalContainer}>
           <Text style={styles.calculation}>Role: {team.role.label}</Text>
-          <ChangeRoleButoon team={team} />
+          <ChangeRoleButoon team={team} fetchData={fetchData}/>
           {/* <Text style={styles.total}>: ₹{totalAmount.toFixed(2)}</Text> */}
         </View>
         <CallMsgButton mobileNumber={team.mobileNumber}/>
