@@ -37,7 +37,7 @@ const ChangeRoleButton = ({team}) => {
         end === "operative"
     }
     try {
-      let url = `${startUrl}/chattiApi/allCommon/allTeam/getByRole/user`;
+      let url = `${startUrl}/chattiApi/allCommon/allTeam/getByRole/${end}`;
       let token = await SecureStore.getItemAsync('authToken');
       const response = await axios.get(
         url,
@@ -49,9 +49,9 @@ const ChangeRoleButton = ({team}) => {
         }
       );
       let myRes = response.data;
+      console.log({data:myRes.data})
       if (myRes.variant === 'success') {
         setAllHead(myRes.data);
-        console.log(myRes.data)
         ToastAndroid.show('Data Loaded.. ', ToastAndroid.SHORT);
       } else {
         ToastAndroid.show('Some error occurred ', ToastAndroid.SHORT);
@@ -65,7 +65,6 @@ const ChangeRoleButton = ({team}) => {
 
     try {
       let url = `${startUrl}/chattiApi/allCommon/oneUser/updateRole/${team._id}`;
-      console.log(url)
       let token = await SecureStore.getItemAsync('authToken');
       const response = await axios.post(
         url,
@@ -139,7 +138,7 @@ const ChangeRoleButton = ({team}) => {
                     selectedHead && selectedHead._id === head._id && styles.selectedRoleButton,
                   ]}
                 >
-                  <Text style={[styles.roleButtonText, selectedHead && selectedHead._id === head.id && styles.selectedRoleButtonText]}>{head.name}</Text>
+                  <Text style={[styles.roleButtonText, selectedHead && selectedHead._id === head.id && styles.selectedRoleButtonText]}>{(head.name)? head.name:head.mobileNumber}</Text>
                 </TouchableOpacity>
               ))}
             </View>
