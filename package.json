@@ -17,7 +17,7 @@
     "@react-navigation/stack": "^6.3.20",
     "axios": "^1.6.2",
     "dayjs": "^1.11.7",
-    "expo": "~50.0.14",
+    "expo": "~50.0.17",
     "expo-dev-client": "~3.3.11",
     "expo-file-system": "~16.0.8",
     "expo-image-picker": "^14.7.1",
