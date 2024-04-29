@@ -84,6 +84,7 @@ const AllOrdersScreen = () => {
           ToastAndroid.show('Cannot open URL', ToastAndroid.SHORT);
         }
       } else {
+        console.log(myRes)
         ToastAndroid.show('Some error occurred ', ToastAndroid.SHORT);
       }
     } catch (error) {
