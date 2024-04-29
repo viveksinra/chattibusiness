@@ -55,8 +55,9 @@ const AllTeamScreen = () => {
             setUserTeam(myRes.data);
             break;
         }
-        ToastAndroid.show('Data Loaded.. ', ToastAndroid.SHORT);
+        ToastAndroid.show(myRes.message, ToastAndroid.SHORT);
       } else {
+        console.log(myRes)
         ToastAndroid.show('Some error occurred ', ToastAndroid.SHORT);
       }
     } catch (error) {

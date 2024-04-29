@@ -21,11 +21,8 @@ const NoOrderHistory = () => {
         style={styles.backgroundImage}
       >
         <View style={styles.overlay}>
-          <Text style={styles.noOrderText}>{t('orderHis.two')}</Text>
-          <TouchableOpacity style={styles.refreshButton} onPress={handleStartOrder}>
-            <FontAwesome name="cart-plus" size={24} color="white" />
-            <Text style={styles.buttonText}>{t('orderHis.three')}</Text>
-          </TouchableOpacity>
+          <Text style={styles.noOrderText}>No Order to Show</Text>
+
         </View>
       </ImageBackground>
     </View>

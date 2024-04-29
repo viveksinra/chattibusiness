@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { FlatList, View, StyleSheet, ImageBackground, ToastAndroid, TouchableOpacity, Text } from 'react-native';
+import { FlatList, View, StyleSheet, ImageBackground, ToastAndroid, TouchableOpacity,Linking , Text } from 'react-native';
 import OrderListItem from '../components/OrderHistoryItem/index';
 import { useTranslation } from 'react-i18next';
 import ContentContext, { startUrl } from '../Context/ContentContext';
@@ -7,6 +7,7 @@ import GeneralLoading from '../components/General/GeneralLoading';
 import * as SecureStore from 'expo-secure-store';
 import axios from 'axios';
 import NoOrderHistory from '../components/OrderHistoryItem/NoOrderHistory';
+import { FontAwesome } from '@expo/vector-icons';
 
 const image = { uri: ContentContext.orderHisBag };
 
@@ -60,6 +61,38 @@ const AllOrdersScreen = () => {
     updateOrderHis();
   }, [selectedTab]); // Include selectedTab in the dependency array
 
+
+  const handleExport = async () => {
+    try {
+      let url = `${startUrl}/chattiApi/allCommon/order/export/allOrder/${selectedTab}`;
+      let token = await SecureStore.getItemAsync('authToken');
+      const response = await axios.get(
+        url,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: token,
+          },
+        }
+      );
+      let myRes = response.data;
+      if (myRes.variant === 'success') {
+        const urlToOpen = myRes.data.url; // Replace with the actual property name
+        if (await Linking.canOpenURL(urlToOpen)) {
+          Linking.openURL(urlToOpen);
+        } else {
+          ToastAndroid.show('Cannot open URL', ToastAndroid.SHORT);
+        }
+      } else {
+        ToastAndroid.show('Some error occurred ', ToastAndroid.SHORT);
+      }
+    } catch (error) {
+      ToastAndroid.show('Some error occurred ', ToastAndroid.SHORT);
+      console.log('Some error occurred while sending or setting the message' + error);
+    }
+  };
+
+  
   const renderTabs = () => {
     const tabs = [
       { id: 'accepted', label: 'Accepted' },
@@ -84,6 +117,13 @@ const AllOrdersScreen = () => {
         <View style={styles.tabsContainer}>
           {renderTabs()}
         </View>
+        <View style={styles.buttonContainer}>
+  <TouchableOpacity style={styles.refreshButton} onPress={handleExport}>
+    <FontAwesome name="refresh" size={24} color="white" />
+    <Text style={styles.buttonText}>Export</Text>
+  </TouchableOpacity>
+</View>
+
         {(selectedTab === 'new' && newOrders.length === 0) ||
          (selectedTab === 'accepted' && acceptedOrders.length === 0) ||
          (selectedTab === 'cancelled' && cancelledOrders.length === 0) ? (
@@ -129,6 +169,24 @@ const styles = StyleSheet.create({
   selectedTabText: {
     fontWeight: 'bold',
     color: 'white',
+  },
+  buttonContainer: {
+    // flex: 1,
+    // justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom:5
+  },
+  refreshButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'blue', // Add your desired background color
+    paddingHorizontal: 10, // Add padding horizontally
+    borderRadius: 5, // Add border radius for rounded corners
+    
+  },
+  buttonText: {
+    color: 'white',
+    marginLeft: 5, // Add some spacing between icon and text
   },
 });
 
