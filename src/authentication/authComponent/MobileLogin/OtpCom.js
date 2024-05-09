@@ -34,7 +34,7 @@ const OtpCom = ({setStep,otp,setOtp,mobileNo}) => {
 
   const verifyOTP = async (mobileNumber, otp) => {
     try {
-      const response = await axios.post(`${startUrl}/chattiApi/allCommon/userAuth/verifyOtp`, {
+      const response = await axios.post(`${startUrl}/chattiApi/allCommon/userAuth/verifyOtp/businessApp`, {
         mobileNumber: mobileNumber,
         otp: otp,
       });

@@ -8,6 +8,8 @@ import * as SecureStore from 'expo-secure-store';
 import axios from 'axios';
 import NoOrderHistory from '../components/OrderHistoryItem/NoOrderHistory';
 import { FontAwesome } from '@expo/vector-icons';
+import NoPermissionScreen from '../components/General/NoPermissionScreen';
+import { AppContext } from '../../context/appContext';
 
 const image = { uri: ContentContext.orderHisBag };
 
@@ -17,6 +19,9 @@ const AllOrdersScreen = () => {
   const [acceptedOrders, setAcceptedOrders] = useState([]);
   const [cancelledOrders, setCancelledOrders] = useState([]);
   const [selectedTab, setSelectedTab] = useState('new'); // Default to 'New'
+  const { 
+    roleId,
+} = useContext(AppContext);
 
   const { t } = useTranslation();
 
@@ -58,7 +63,8 @@ const AllOrdersScreen = () => {
   };
 
   useEffect(() => {
-    updateOrderHis();
+    if(roleId !== "none" && roleId !== "user"){
+    updateOrderHis();}
   }, [selectedTab]); // Include selectedTab in the dependency array
 
 
@@ -113,7 +119,7 @@ const AllOrdersScreen = () => {
   };
 
   return (
-    <ImageBackground source={image} style={styles.backgroundImage}>
+  (roleId === "none" || roleId === "user") ? <NoPermissionScreen /> :(<ImageBackground source={image} style={styles.backgroundImage}>
       <View style={styles.container}>
         <View style={styles.tabsContainer}>
           {renderTabs()}
@@ -138,7 +144,7 @@ const AllOrdersScreen = () => {
         )}
         <GeneralLoading loading={loading} loadingText={'Updating Order History'} />
       </View>
-    </ImageBackground>
+    </ImageBackground>)
   );
 };
 

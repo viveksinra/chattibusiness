@@ -8,6 +8,8 @@ import axios from 'axios';
 import NoOrderHistory from '../components/OrderHistoryItem/NoOrderHistory';
 import AllTeamItem from '../components/TeamComponent/AllTeamItem';
 import NoTeam from '../components/TeamComponent/NoTeam';
+import { AppContext } from '../../context/appContext';
+import NoPermissionScreen from '../components/General/NoPermissionScreen';
 
 const image = { uri: ContentContext.orderHisBag };
 
@@ -20,7 +22,17 @@ const AllTeamScreen = () => {
   const [collaboratorTeam, setCollaboratorTeam] = useState([]);
   const [userTeam, setUserTeam] = useState([]);
   const [selectedTab, setSelectedTab] = useState('none'); // Default to 'user'
-
+  const [tabs, setTabs] = useState([
+    { id: 'none', label: 'None' },
+    { id: 'collaborator', label: 'Collaborator' },
+    { id: 'operative', label: 'Operative' },
+    { id: 'business', label: 'Business' },
+    { id: 'core', label: 'Core' },
+    { id: 'user', label: 'User' },
+  ]); // Default to 'user'
+  const { 
+    roleId,
+} = useContext(AppContext);
   const { t } = useTranslation();
 
   const fetchData = async (tab) => {
@@ -75,20 +87,37 @@ const AllTeamScreen = () => {
   useEffect(() => {
     fetchData(selectedTab);
   }, [selectedTab]);
+  useEffect(() => {
+    if(roleId === "business"){
+      setTabs([
+        { id: 'none', label: 'None' },
+        { id: 'collaborator', label: 'Collaborator' },
+        { id: 'operative', label: 'Operative' },
+        { id: 'user', label: 'User' },  
+      ]);
+    }
+    if(roleId === "operative"){
+      setTabs([
+        { id: 'none', label: 'None' },
+        { id: 'collaborator', label: 'Collaborator' },
+      ]);
+    }
+    if(roleId === "core" || roleId === "admin"){
+      setTabs([
+        { id: 'none', label: 'None' },
+        { id: 'collaborator', label: 'Collaborator' },
+        { id: 'operative', label: 'Operative' },
+        { id: 'business', label: 'Business' },
+        { id: 'core', label: 'Core' },
+        { id: 'user', label: 'User' },
+      ]);
+    }
+  }, [roleId]);
 
   const renderTabs = () => {
-    const tabs = [
-      { id: 'none', label: 'None' },
-      { id: 'collaborator', label: 'Collaborator' },
-      { id: 'operative', label: 'Operative' },
-      { id: 'business', label: 'Business' },
-      { id: 'core', label: 'Core' },
-      { id: 'user', label: 'User' },
-
-    ];
 
     return (
-      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+     <ScrollView horizontal showsHorizontalScrollIndicator={false}>
         {tabs.map((tab) => (
           <TouchableOpacity
             key={tab.id}
@@ -105,30 +134,30 @@ const AllTeamScreen = () => {
   const renderTeamList = () => {
     switch (selectedTab) {
       case 'none':
-        return noneTeam.length === 0 ? <NoTeam updateAllTeam={() => fetchData(selectedTab)} /> : <FlatList data={noneTeam} keyExtractor={(item, index) => index.toString()} renderItem={({ item }) => <AllTeamItem team={item} fetchData={fetchData} />} />;
+        return noneTeam.length === 0 ? <NoTeam updateAllTeam={() => fetchData(selectedTab)} /> : <FlatList data={noneTeam} keyExtractor={(item, index) => index.toString()} renderItem={({ item }) => <AllTeamItem roleId={roleId} team={item} fetchData={fetchData} />} />;
       case 'user':
-        return userTeam.length === 0 ? <NoTeam updateAllTeam={() => fetchData(selectedTab)} /> : <FlatList data={userTeam} keyExtractor={(item, index) => index.toString()} renderItem={({ item }) => <AllTeamItem team={item} fetchData={fetchData} />} />;
+        return userTeam.length === 0 ? <NoTeam updateAllTeam={() => fetchData(selectedTab)} /> : <FlatList data={userTeam} keyExtractor={(item, index) => index.toString()} renderItem={({ item }) => <AllTeamItem roleId={roleId} team={item} fetchData={fetchData} />} />;
       case 'core':
-        return coreTeam.length === 0 ? <NoTeam updateAllTeam={() => fetchData(selectedTab)} /> : <FlatList data={coreTeam} keyExtractor={(item, index) => index.toString()} renderItem={({ item }) => <AllTeamItem team={item} fetchData={fetchData} />} />;
+        return coreTeam.length === 0 ? <NoTeam updateAllTeam={() => fetchData(selectedTab)} /> : <FlatList data={coreTeam} keyExtractor={(item, index) => index.toString()} renderItem={({ item }) => <AllTeamItem roleId={roleId} team={item} fetchData={fetchData} />} />;
       case 'collaborator':
-        return collaboratorTeam.length === 0 ? <NoTeam updateAllTeam={() => fetchData(selectedTab)} /> : <FlatList data={collaboratorTeam} keyExtractor={(item, index) => index.toString()} renderItem={({ item }) => <AllTeamItem team={item} fetchData={fetchData} />} />;
+        return collaboratorTeam.length === 0 ? <NoTeam updateAllTeam={() => fetchData(selectedTab)} /> : <FlatList data={collaboratorTeam} keyExtractor={(item, index) => index.toString()} renderItem={({ item }) => <AllTeamItem roleId={roleId} team={item} fetchData={fetchData} />} />;
       case 'operative':
-        return operativeTeam.length === 0 ? <NoTeam updateAllTeam={() => fetchData(selectedTab)} /> : <FlatList data={operativeTeam} keyExtractor={(item, index) => index.toString()} renderItem={({ item }) => <AllTeamItem team={item} fetchData={fetchData} />} />;
+        return operativeTeam.length === 0 ? <NoTeam updateAllTeam={() => fetchData(selectedTab)} /> : <FlatList data={operativeTeam} keyExtractor={(item, index) => index.toString()} renderItem={({ item }) => <AllTeamItem roleId={roleId} team={item} fetchData={fetchData} />} />;
       case 'business':
-        return businessTeam.length === 0 ? <NoTeam updateAllTeam={() => fetchData(selectedTab)} /> : <FlatList data={businessTeam} keyExtractor={(item, index) => index.toString()} renderItem={({ item }) => <AllTeamItem team={item} fetchData={fetchData} />} />;
+        return businessTeam.length === 0 ? <NoTeam updateAllTeam={() => fetchData(selectedTab)} /> : <FlatList data={businessTeam} keyExtractor={(item, index) => index.toString()} renderItem={({ item }) => <AllTeamItem roleId={roleId} team={item} fetchData={fetchData} />} />;
       default:
         return null;
     }
   };
 
   return (
-    <ImageBackground source={image} style={styles.backgroundImage}>
+    (roleId === "none" || roleId === "user") ? <NoPermissionScreen /> : ( <ImageBackground source={image} style={styles.backgroundImage}>
       <View style={styles.container}>
         <View style={styles.tabsContainer}>{renderTabs()}</View>
         {renderTeamList()}
         <GeneralLoading loading={loading} loadingText={'Getting Team Datas'} />
       </View>
-    </ImageBackground>
+    </ImageBackground>)
   );
 };
 
