@@ -9,7 +9,7 @@ const Label = ({ text }) => {
   return <Text style={styles.textLabel}>{text}</Text>;
 };
 
-const OpScreen2 = ({location, setLocation,address, setAddress,flat, setFlat}) => {
+const OpScreen2 = ({location, setLocation,address, setAddress,flat, setFlat, name,setName}) => {
   const { t } = useTranslation();
 
   const [errorMsg, setErrorMsg] = useState(null);
@@ -70,6 +70,8 @@ const OpScreen2 = ({location, setLocation,address, setAddress,flat, setFlat}) =>
 
             <View style={styles.inputContainer}>
 
+          <Label text="Name" />
+              <TextInput style={[styles.input, styles.addressInput]} placeholder={"Name"} value={name} onChangeText={text => setName(text)} />
           <Label text={t('opScreen2.two')} />
               <TextInput style={[styles.input, styles.addressInput]} placeholder={t('opScreen2.two')} value={flat} onChangeText={text => setFlat(text)} />
             <Label text={t('opScreen2.three')} />             

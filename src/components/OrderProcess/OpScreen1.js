@@ -5,11 +5,16 @@ import { useTranslation } from 'react-i18next';
 const Label = ({ text }) => {
   return <Text style={styles.textLabel}>{text}</Text>;
 };
-const OpScreen1 = ({ order,product,weight, setWeight,mobileNumber, setMobileNumber }) => {
+const OpScreen1 = ({ order,product,weight, setWeight,mobileNumber, setMobileNumber,
+  dhala,setDhala,freight,setFreight,miscellaneous,setMiscellaneous
+
+ }) => {
   const { t } = useTranslation();
   const pricePerKg = order.orderPrice / 100;
   const totalAmount = (pricePerKg * parseFloat(weight)) || 0;
   const calculationText = weight ? `₹${pricePerKg.toFixed(2)}/${t('opScreen1.one')} x ${weight} ${t('opScreen1.one')}` : '';
+  const ExactTotal = totalAmount - (+dhala + +freight + +miscellaneous)
+  const secCalPart = `${totalAmount.toFixed(2)} - ${dhala} - ${freight} - ${miscellaneous}`
   return (
     <ScrollView>
     <View style={styles.container}>
@@ -27,6 +32,10 @@ const OpScreen1 = ({ order,product,weight, setWeight,mobileNumber, setMobileNumb
         {weight && <View style={styles.totalContainer}>
       <Text style={styles.calculation}>{calculationText}</Text>
         <Text style={styles.total}>: ₹{totalAmount.toFixed(2)}</Text>
+        </View>}
+        {weight && <View style={styles.totalContainer}>
+      <Text style={styles.calculation}>{secCalPart}</Text>
+        <Text style={styles.total}>: ₹{ExactTotal.toFixed(2)}</Text>
         </View>}
       </View>
      
@@ -53,7 +62,40 @@ const OpScreen1 = ({ order,product,weight, setWeight,mobileNumber, setMobileNumb
           returnKeyType="done"
           blurOnSubmit={true}
           maxLength={12}
-
+        /> 
+        <Label text={"Charges👇"} style={{ color: 'red' }} />
+        <Label text={"Dhala Amount"} />
+        <TextInput
+          style={styles.redTextInput}
+          onChangeText={setDhala}
+          value={dhala}
+          placeholder={"Dhala"}
+          keyboardType="numeric"
+          returnKeyType="done"
+          blurOnSubmit={true}
+          maxLength={12}
+        />    
+        <Label text={"Freight Amount"} />
+        <TextInput
+          style={styles.redTextInput}
+          onChangeText={setFreight}
+          value={freight}
+          placeholder={"Freight"}
+          keyboardType="numeric"
+          returnKeyType="done"
+          blurOnSubmit={true}
+          maxLength={12}
+        />    
+        <Label text={"Miscellaneous Amount"}  />
+        <TextInput
+          style={styles.redTextInput}
+          onChangeText={setMiscellaneous}
+          value={miscellaneous}
+          placeholder={"Other Charges"}
+          keyboardType="numeric"
+          returnKeyType="done"
+          blurOnSubmit={true}
+          maxLength={12}
         />    
 
     
@@ -144,6 +186,15 @@ const styles = StyleSheet.create({
   textInput: {
     borderWidth: 1,
     borderColor: 'gray',
+    borderRadius: 5,
+    padding: 10,
+    width: '100%',
+    marginBottom: 10,
+    fontSize: 18, // Adjust the value to set the desired font size
+  },
+  redTextInput: {
+    borderWidth: 2,
+    borderColor: 'red',
     borderRadius: 5,
     padding: 10,
     width: '100%',

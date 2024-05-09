@@ -22,8 +22,12 @@ const UpdateOrderScreen = ({ route }) => {
   const [orderPrice, setOrderPrice] = useState()
   const [currentStep, setCurrentStep] = useState(1);
   const [weight, setWeight] = useState(weightInKg);
+  const [dhala, setDhala] = useState(order.dhala?order.dhala:"");
+  const [freight, setFreight] = useState(order.freight?order.freight:"");
+  const [miscellaneous, setMiscellaneous] = useState(order.miscellaneous?order.miscellaneous:"");
   const [location, setLocation] = useState(order.location? order.location:null);
   const [address, setAddress] = useState(order.address? order.address:{});
+  const [name, setName] = useState(order.name?order.name:"");
   const [flat, setFlat] = useState(order.flat?order.flat:"");
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(order.selectedPaymentMethod);
   const [upiId, setUpiId] = useState(order.upiId);
@@ -59,7 +63,7 @@ const UpdateOrderScreen = ({ route }) => {
       const token = await SecureStore.getItemAsync('authToken');
       const response = await axios.post(
         url,
-        { product, weight, mobileNumber, location, address, flat, selectedPaymentMethod, upiId, accountNumber, accountHolderName, ifsc },
+        { product, weight,dhala,freight,miscellaneous, mobileNumber, location, address, flat,name, selectedPaymentMethod, upiId, accountNumber, accountHolderName, ifsc },
         { headers: { 'Content-Type': 'application/json', Authorization: token } }
       );
       const myRes = response.data;
@@ -87,9 +91,11 @@ const UpdateOrderScreen = ({ route }) => {
   const renderStepContent = () => {
     switch (currentStep) {
       case 1:
-        return <OpScreen1 order={order} product={product} weight={weight} setWeight={setWeight} mobileNumber={mobileNumber} setMobileNumber={setMobileNumber} />;
+        return <OpScreen1 order={order} product={product} weight={weight} setWeight={setWeight} mobileNumber={mobileNumber} setMobileNumber={setMobileNumber}
+        dhala={dhala} setDhala={setDhala} freight={freight} setFreight={setFreight} miscellaneous={miscellaneous} setMiscellaneous={setMiscellaneous}
+        />;
       case 2:
-        return <OpScreen2 product={product} location={location} setLocation={setLocation} address={address} setAddress={setAddress} flat={flat} setFlat={setFlat} />;
+        return <OpScreen2 product={product} location={location} setLocation={setLocation} address={address} setAddress={setAddress} flat={flat} setFlat={setFlat} name={name} setName={setName} />;
       case 3:
         return <OpScreen3 selectedPaymentMethod={selectedPaymentMethod} setSelectedPaymentMethod={setSelectedPaymentMethod} upiId={upiId} setUpiId={setUpiId} accountNumber={accountNumber} setAccountNumber={setAccountNumber} accountHolderName={accountHolderName} setAccountHolderName={setAccountHolderName} ifsc={ifsc} setIfsc={setIfsc} />;
       default:

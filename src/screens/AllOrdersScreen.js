@@ -119,7 +119,7 @@ const AllOrdersScreen = () => {
   };
 
   return (
-  (roleId === "none" || roleId === "user") ? <NoPermissionScreen /> :(<ImageBackground source={image} style={styles.backgroundImage}>
+<ImageBackground source={image} style={styles.backgroundImage}>
       <View style={styles.container}>
         <View style={styles.tabsContainer}>
           {renderTabs()}
@@ -144,7 +144,7 @@ const AllOrdersScreen = () => {
         )}
         <GeneralLoading loading={loading} loadingText={'Updating Order History'} />
       </View>
-    </ImageBackground>)
+    </ImageBackground>
   );
 };
 
