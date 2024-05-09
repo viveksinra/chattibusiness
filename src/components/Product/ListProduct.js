@@ -70,6 +70,7 @@ const ListProduct = ({ product,getProduct }) => {
         <Text style={styles.name}>{t('LanguageCode') === "en-IN" ? product.productName : product.productNameHindi}</Text>
         <Text style={styles.quality}>{t('product.one')} {t('LanguageCode') === "en-IN" ? product.quality : product.qualityHindi}</Text>
         <Text style={styles.price}>{t('product.two')}{product.price}/{t('opScreen1.two')}</Text>
+        <Text style={styles.quality}> {t('LanguageCode') === "en-IN" ? product.description : product.descriptionHindi}</Text>
 
         <Pressable style={styles.addButton} onPress={() => setIsModalVisible(true)}>
           <Text style={styles.buttonText}>{t('product.three')}</Text>
