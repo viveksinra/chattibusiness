@@ -4,7 +4,7 @@ import * as SecureStore from 'expo-secure-store';
 import { startUrl } from '../Context/ContentContext';
 import axios from 'axios';
 
-const handleSetData = async ({ setName, setStatus, setUserImage, setMobileNumber }) => {
+const handleSetData = async ({ setName, setStatus, setUserImage,setRoleId, setMobileNumber }) => {
 
     try {
       // Step 1: Retrieve profile data from local storage
@@ -15,11 +15,12 @@ const handleSetData = async ({ setName, setStatus, setUserImage, setMobileNumber
         storedProfile = JSON.parse(storedProfile);
   
         // Destructure profile data
-        const { name, status, userImage, mobileNumber } = storedProfile;
+        const { name, status, userImage,roleId, mobileNumber } = storedProfile;
   
         // Step 2: Update state with retrieved profile data
         setName(name);
         setStatus(status);
+        setRoleId(roleId);
         setUserImage(userImage); // Assuming userImage is the key for the profile image
         setMobileNumber(mobileNumber); // Assuming userImage is the key for the profile image
         // Assuming you have a state variable for mobile number as well, update it if needed
@@ -43,6 +44,7 @@ const handleSetData = async ({ setName, setStatus, setUserImage, setMobileNumber
           // Assuming apiData has properties like name, status, userImage, mobileNumber
           setName(apiData.name);
           setStatus(apiData.status);
+        setRoleId(apiData.roleId);
           setUserImage(apiData.userImage);
           setMobileNumber(apiData.mobileNumber);
   
@@ -52,6 +54,7 @@ const handleSetData = async ({ setName, setStatus, setUserImage, setMobileNumber
             status: apiData.status,
             userImage: apiData.userImage,
             mobileNumber: apiData.mobileNumber,
+            role:apiData.roleId
           };
   
           await SecureStore.setItemAsync('profile', JSON.stringify(updatedProfile));

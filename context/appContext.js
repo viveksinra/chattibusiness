@@ -10,6 +10,7 @@ export const AppContextProvider = ({ children }) => {
   const [mobileNumber, setMobileNumber] = useState('Your Mobile No');
   const [status, setStatus] = useState('Your Status');
   const [userImage, setUserImage] = useState(ContentContext.krishnaImg);
+  const [roleId,setRoleId] = useState("user")
   const appContextValue = useMemo(() => ({
     isSignedIn,
     setIsSignedIn,
@@ -20,8 +21,10 @@ export const AppContextProvider = ({ children }) => {
     status,
     setStatus,
     userImage,
-    setUserImage
-  }), [isSignedIn, name, status,userImage,mobileNumber]);
+    setUserImage,
+    roleId,
+    setRoleId,
+  }), [isSignedIn, name,roleId, status,userImage,mobileNumber]);
 
   return (
     <AppContext.Provider value={appContextValue}>

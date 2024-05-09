@@ -21,17 +21,19 @@ const SettingScreen = () => {
     status,
     setStatus,
     userImage,
+    roleId,
+    setRoleId,
     setUserImage } = useContext(AppContext);
   useEffect(() => {
     // Call handleSetData when the component mounts
-    handleSetData({ setName, setStatus, setUserImage, setMobileNumber });
+    handleSetData({ setName, setStatus,setRoleId, setUserImage, setMobileNumber });
 
   }, []); 
 
   return (
     <LinearGradient colors={['#FFFFFF', '#D9E4F5']} style={styles.container}>
       {/* <OtherComponent /> */}
-      <ProfileButton name={name} status={status} userImage={userImage}/>
+      <ProfileButton name={name} status={status} roleId={roleId} userImage={userImage}/>
       {/* <ThemeSelector /> */}
       <LanguageSelector showIconOnly={false}  />
       {/* <ShareCom /> */}

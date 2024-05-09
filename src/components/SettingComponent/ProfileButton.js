@@ -5,9 +5,9 @@ import Icon from 'react-native-vector-icons/FontAwesome'; // import the Icon com
 import { useNavigation } from '@react-navigation/native';
 
 
-const ProfileButton = ({name,status,userImage}) => {
+const ProfileButton = ({name,status,userImage,roleId}) => {
 
-
+  const capitalizedStr = roleId.charAt(0).toUpperCase() + roleId.slice(1)
 
   const {t} = useTranslation();
   const navigation = useNavigation();
@@ -25,6 +25,9 @@ const ProfileButton = ({name,status,userImage}) => {
         </Text>
         <Text style={styles.status} numberOfLines={1}>
           {status}
+        </Text>
+        <Text style={styles.role} numberOfLines={1}>
+          Role: {capitalizedStr}
         </Text>
       </View>
       <View>
@@ -57,6 +60,11 @@ const styles = StyleSheet.create({
   },
   name: {
     fontSize: 18,
+    fontWeight: 'bold',
+    color: '#333',
+  },
+  role: {
+    fontSize: 15,
     fontWeight: 'bold',
     color: '#333',
   },
