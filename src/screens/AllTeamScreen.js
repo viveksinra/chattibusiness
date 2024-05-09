@@ -13,12 +13,13 @@ const image = { uri: ContentContext.orderHisBag };
 
 const AllTeamScreen = () => {
   const [loading, setLoading] = useState(false);
+  const [noneTeam, setNoneTeam] = useState([]);
   const [coreTeam, setCoreTeam] = useState([]);
   const [businessTeam, setBusinessTeam] = useState([]);
   const [operativeTeam, setOperativeTeam] = useState([]);
   const [collaboratorTeam, setCollaboratorTeam] = useState([]);
   const [userTeam, setUserTeam] = useState([]);
-  const [selectedTab, setSelectedTab] = useState('user'); // Default to 'user'
+  const [selectedTab, setSelectedTab] = useState('none'); // Default to 'user'
 
   const { t } = useTranslation();
 
@@ -36,8 +37,9 @@ const AllTeamScreen = () => {
       let myRes = response.data;
       if (myRes.variant === 'success') {
         switch (tab) {
-          case 'user':
-            setUserTeam(myRes.data);
+          
+          case 'none':
+            setNoneTeam(myRes.data);
             break;
           case 'core':
             setCoreTeam(myRes.data);
@@ -50,6 +52,9 @@ const AllTeamScreen = () => {
             break;
           case 'collaborator':
             setCollaboratorTeam(myRes.data);
+            break;
+          case 'user':
+              setUserTeam(myRes.data);
             break;
           default:
             setUserTeam(myRes.data);
@@ -73,12 +78,13 @@ const AllTeamScreen = () => {
 
   const renderTabs = () => {
     const tabs = [
-      { id: 'user', label: 'User' },
+      { id: 'none', label: 'None' },
       { id: 'collaborator', label: 'Collaborator' },
       { id: 'operative', label: 'Operative' },
       { id: 'business', label: 'Business' },
       { id: 'core', label: 'Core' },
-      { id: 'admin', label: 'Admin' },
+      { id: 'user', label: 'User' },
+
     ];
 
     return (
@@ -98,6 +104,8 @@ const AllTeamScreen = () => {
 
   const renderTeamList = () => {
     switch (selectedTab) {
+      case 'none':
+        return noneTeam.length === 0 ? <NoTeam updateAllTeam={() => fetchData(selectedTab)} /> : <FlatList data={noneTeam} keyExtractor={(item, index) => index.toString()} renderItem={({ item }) => <AllTeamItem team={item} fetchData={fetchData} />} />;
       case 'user':
         return userTeam.length === 0 ? <NoTeam updateAllTeam={() => fetchData(selectedTab)} /> : <FlatList data={userTeam} keyExtractor={(item, index) => index.toString()} renderItem={({ item }) => <AllTeamItem team={item} fetchData={fetchData} />} />;
       case 'core':
@@ -118,7 +126,7 @@ const AllTeamScreen = () => {
       <View style={styles.container}>
         <View style={styles.tabsContainer}>{renderTabs()}</View>
         {renderTeamList()}
-        <GeneralLoading loading={loading} loadingText={'Updating Order History'} />
+        <GeneralLoading loading={loading} loadingText={'Getting Team Datas'} />
       </View>
     </ImageBackground>
   );

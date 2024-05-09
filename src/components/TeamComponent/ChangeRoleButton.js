@@ -3,6 +3,8 @@ import { View, Text, Modal, TouchableOpacity, StyleSheet, ToastAndroid, Alert } 
 import * as SecureStore from 'expo-secure-store';
 import axios from 'axios';
 import { startUrl } from '../../Context/ContentContext';
+import { ScrollView } from 'react-native-gesture-handler';
+import GeneralLoading from '../General/GeneralLoading';
 
 
 const ChangeRoleButton = ({team,fetchData}) => {
@@ -10,6 +12,7 @@ const ChangeRoleButton = ({team,fetchData}) => {
   const [selectedRole, setSelectedRole] = useState(team.role);
   const [allHead, setAllHead] = useState([]);
   const [selectedHead, setSelectedHead] = useState();
+  const [loading, setLoading] = useState(false);
 
 
   const roles = [
@@ -22,6 +25,7 @@ const ChangeRoleButton = ({team,fetchData}) => {
 
   const handleRoleChange = (role) => {
     setSelectedRole(role);
+    setSelectedHead()
     if (role.id === 'business' || role.id === 'operative' || role.id === 'collaborator') {
       GetAndSetAllHead(role);
     } else {
@@ -30,6 +34,7 @@ const ChangeRoleButton = ({team,fetchData}) => {
   };
 
   const GetAndSetAllHead = async (role) => {
+    setLoading(true)
     let end = "core"
     if(role.id == "operative"){
         end = "business"
@@ -60,10 +65,15 @@ const ChangeRoleButton = ({team,fetchData}) => {
       ToastAndroid.show('Some error occurred ', ToastAndroid.SHORT);
       console.log('Some error occurred while sending or setting the message' + error);
     }
+    setLoading(false)
+
   };
   const updateRoleApi = async () => {
 
     try {
+      if((selectedRole.id === "business" || selectedRole.id === "operative" || selectedRole.id === "collaborator") && (!selectedHead)){
+        alert("Head is Required for this role")
+      }else{
       let url = `${startUrl}/chattiApi/allCommon/oneUser/updateRole/${team._id}`;
       let token = await SecureStore.getItemAsync('authToken');
       const response = await axios.post(
@@ -82,7 +92,7 @@ const ChangeRoleButton = ({team,fetchData}) => {
         ToastAndroid.show('Updated.. ', ToastAndroid.SHORT);
       } else {
         ToastAndroid.show('Some error occurred ', ToastAndroid.SHORT);
-      }
+      }}
     } catch (error) {
       ToastAndroid.show('Some error occurred ', ToastAndroid.SHORT);
       console.log('Some error occurred while sending or setting the message' + error);
@@ -127,11 +137,11 @@ const ChangeRoleButton = ({team,fetchData}) => {
           </View>
 
           {allHead && (
-            <View style={styles.rolesContainer}>
+            <ScrollView style={styles.rolesContainer}>
               <Text style={styles.modalTitle}>Select Head:</Text>
               {allHead.map((head) => (
                 <TouchableOpacity
-                  key={head.id}
+                  key={head._id}
                   onPress={() => setSelectedHead(head)}
                   style={[
                     styles.roleButton,
@@ -141,8 +151,9 @@ const ChangeRoleButton = ({team,fetchData}) => {
                   <Text style={[styles.roleButtonText, selectedHead && selectedHead._id === head.id && styles.selectedRoleButtonText]}>{(head.name)? head.name:head.mobileNumber}</Text>
                 </TouchableOpacity>
               ))}
-            </View>
+            </ScrollView>
           )}
+        <GeneralLoading loading={loading} loadingText={'Getting Head'} />
 
           <View style={styles.buttonsContainer}>
             <TouchableOpacity style={styles.cancelButton} onPress={() => setModalVisible(false)}>
@@ -214,7 +225,7 @@ const styles = StyleSheet.create({
   rolesContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    justifyContent: 'center',
+    // justifyContent: 'center',
     marginBottom: 20,
   },
   roleButton: {

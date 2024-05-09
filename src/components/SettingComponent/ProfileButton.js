@@ -7,7 +7,6 @@ import { useNavigation } from '@react-navigation/native';
 
 const ProfileButton = ({name,status,userImage,roleId}) => {
 
-  const capitalizedStr = roleId.charAt(0).toUpperCase() + roleId.slice(1)
 
   const {t} = useTranslation();
   const navigation = useNavigation();
@@ -27,7 +26,7 @@ const ProfileButton = ({name,status,userImage,roleId}) => {
           {status}
         </Text>
         <Text style={styles.role} numberOfLines={1}>
-          Role: {capitalizedStr}
+          Your Role: {roleId}
         </Text>
       </View>
       <View>
