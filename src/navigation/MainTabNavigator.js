@@ -8,13 +8,16 @@ import SettingScreen from "../screens/SettingScreen";
 import {useTranslation} from 'react-i18next';
 import LanguageSelector from "../components/SettingComponent/LanguageSelector";
 import { View,Image,Animated } from "react-native";
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import MainHeader from "./component/mainHeader";
+import { AppContext } from "../../context/appContext";
 const Tab = createBottomTabNavigator();
 
 const MainTabNavigator = () => {
   const { t } = useTranslation();
-
+  const { 
+    roleId,
+} = useContext(AppContext);
   return (
     <Tab.Navigator
       initialRouteName="homeScreen" 
@@ -46,7 +49,7 @@ const MainTabNavigator = () => {
   })}
 />
 
-      <Tab.Screen
+   <Tab.Screen
         name="Orders"
         component={AllOrdersScreen}
         options={{
@@ -57,7 +60,7 @@ const MainTabNavigator = () => {
           ),
         }}
       />
-      <Tab.Screen
+   <Tab.Screen
         name="Teams"
         component={AllTeamScreen}
         options={{

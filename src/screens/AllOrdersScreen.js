@@ -10,6 +10,7 @@ import NoOrderHistory from '../components/OrderHistoryItem/NoOrderHistory';
 import { FontAwesome } from '@expo/vector-icons';
 import NoPermissionScreen from '../components/General/NoPermissionScreen';
 import { AppContext } from '../../context/appContext';
+import { AntDesign } from '@expo/vector-icons';
 
 const image = { uri: ContentContext.orderHisBag };
 
@@ -63,8 +64,8 @@ const AllOrdersScreen = () => {
   };
 
   useEffect(() => {
-    if(roleId !== "none" && roleId !== "user"){
-    updateOrderHis();}
+
+    updateOrderHis();
   }, [selectedTab]); // Include selectedTab in the dependency array
 
 
@@ -119,16 +120,23 @@ const AllOrdersScreen = () => {
   };
 
   return (
-<ImageBackground source={image} style={styles.backgroundImage}>
+     (!roleId || roleId === "user" || roleId === "none")? ( <NoPermissionScreen /> ): (<ImageBackground source={image} style={styles.backgroundImage}>
       <View style={styles.container}>
         <View style={styles.tabsContainer}>
           {renderTabs()}
         </View>
         <View style={styles.buttonContainer}>
-  <TouchableOpacity style={styles.refreshButton} onPress={handleExport}>
+ <View style={styles.tabsContainer}> 
+   <TouchableOpacity style={styles.refreshButton} onPress={updateOrderHis}>
     <FontAwesome name="refresh" size={24} color="white" />
+    <Text style={styles.buttonText}>Refresh</Text>
+  </TouchableOpacity>
+  <TouchableOpacity style={styles.refreshButton} onPress={handleExport}>
+  <AntDesign name="export" size={24} color="white" />
     <Text style={styles.buttonText}>Export</Text>
   </TouchableOpacity>
+  </View>
+
 </View>
 
         {(selectedTab === 'new' && newOrders.length === 0) ||
@@ -144,7 +152,7 @@ const AllOrdersScreen = () => {
         )}
         <GeneralLoading loading={loading} loadingText={'Updating Order History'} />
       </View>
-    </ImageBackground>
+    </ImageBackground>)
   );
 };
 
@@ -189,7 +197,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'blue', // Add your desired background color
     paddingHorizontal: 10, // Add padding horizontally
     borderRadius: 5, // Add border radius for rounded corners
-    
+    marginRight:10
   },
   buttonText: {
     color: 'white',

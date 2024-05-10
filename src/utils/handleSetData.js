@@ -54,7 +54,7 @@ const handleSetData = async ({ setName, setStatus, setUserImage,setRoleId, setMo
             status: apiData.status,
             userImage: apiData.userImage,
             mobileNumber: apiData.mobileNumber,
-            role:apiData.roleId
+            roleId:apiData.roleId
           };
   
           await SecureStore.setItemAsync('profile', JSON.stringify(updatedProfile));

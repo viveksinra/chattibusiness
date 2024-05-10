@@ -151,13 +151,13 @@ const AllTeamScreen = () => {
   };
 
   return (
- <ImageBackground source={image} style={styles.backgroundImage}>
+    (!roleId || roleId === "user" || roleId === "none")? ( <NoPermissionScreen /> ): ( <ImageBackground source={image} style={styles.backgroundImage}>
       <View style={styles.container}>
         <View style={styles.tabsContainer}>{renderTabs()}</View>
         {renderTeamList()}
         <GeneralLoading loading={loading} loadingText={'Getting Team Datas'} />
       </View>
-    </ImageBackground>
+    </ImageBackground>)
   );
 };
 
