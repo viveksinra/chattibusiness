@@ -16,15 +16,24 @@ const UpdateOrderScreen = ({ route }) => {
   let weightInKg = ""
   if(order.weightInKg){
  weightInKg = (order.weightInKg).toString()}
+  let dhalaInStr = ""
+  if(order.dhala){
+    dhalaInStr = (order.dhala).toString()}
+  let freightInStr = ""
+  if(order.freight){
+    freightInStr = (order.freight).toString()}
+  let miscellaneousInStr = ""
+  if(order.miscellaneous){
+    miscellaneousInStr = (order.miscellaneous).toString()}
  
   const [mobileNumber, setMobileNumber] = useState(order.mobileNumber);
  
   const [orderPrice, setOrderPrice] = useState()
   const [currentStep, setCurrentStep] = useState(1);
   const [weight, setWeight] = useState(weightInKg);
-  const [dhala, setDhala] = useState(order.dhala?order.dhala:"");
-  const [freight, setFreight] = useState(order.freight?order.freight:"");
-  const [miscellaneous, setMiscellaneous] = useState(order.miscellaneous?order.miscellaneous:"");
+  const [dhala, setDhala] = useState(dhalaInStr);
+  const [freight, setFreight] = useState(freightInStr);
+  const [miscellaneous, setMiscellaneous] = useState(miscellaneousInStr);
   const [location, setLocation] = useState(order.location? order.location:null);
   const [address, setAddress] = useState(order.address? order.address:{});
   const [name, setName] = useState(order.name?order.name:"");

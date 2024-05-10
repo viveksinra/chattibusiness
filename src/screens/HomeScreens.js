@@ -12,6 +12,8 @@ import axios from 'axios';
 import * as SecureStore from 'expo-secure-store';
 import GeneralLoading from '../components/General/GeneralLoading';
 import { FontAwesome } from '@expo/vector-icons';
+import handleSetData from '../utils/handleSetData';
+import { AppContext } from '../../context/appContext';
 
 const HomeScreens = () => {
   const navigation = useNavigation();
@@ -50,7 +52,21 @@ const HomeScreens = () => {
   useEffect(() => {
     getProduct();
   }, []);
+  const { name,
+    setName,
+    mobileNumber,
+    setMobileNumber,
+    status,
+    setStatus,
+    userImage,
+    roleId,
+    setRoleId,
+    setUserImage } = useContext(AppContext);
+  useEffect(() => {
+    // Call handleSetData when the component mounts
+    handleSetData({ setName, setStatus,setRoleId, setUserImage, setMobileNumber });
 
+  }, []);
   const handleRefresh = () => {
     getProduct();
   };
