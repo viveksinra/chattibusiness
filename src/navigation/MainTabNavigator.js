@@ -12,7 +12,7 @@ import { View,Image,Animated } from "react-native";
 import { useContext, useEffect } from "react";
 import MainHeader from "./component/mainHeader";
 import { AppContext } from "../../context/appContext";
-import DispatchScreen from "../screens/DispatchScreen";
+import StockScreen from "../screens/StockScreen";
 const Tab = createBottomTabNavigator();
 
 const MainTabNavigator = () => {
@@ -64,11 +64,11 @@ const MainTabNavigator = () => {
         }}
       />
    <Tab.Screen
-        name="Dispatch"
-        component={DispatchScreen}
+        name="Stock"
+        component={StockScreen}
         options={{
-          tabBarLabel: t('tab.dispatch'),
-          headerTitle:t('tab.dispatch'),
+          tabBarLabel: t('tab.stock'),
+          headerTitle:t('tab.stock'),
           tabBarIcon: ({ color, size }) => (
             <Feather name="truck" size={size} color={color} />
 

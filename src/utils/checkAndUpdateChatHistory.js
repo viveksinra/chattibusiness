@@ -41,7 +41,7 @@ let apiChatCount = 0
 replaceMessagesInAsyncStorageAndContext(allChats)
 // LocalDeleteAllChat(clearMessages)
       // Update the Message context with the new chats
-      // dispatch({ type: 'SET_MESSAGES', payload: allChats });
+      // stock({ type: 'SET_MESSAGES', payload: allChats });
     }
   } catch (error) {
     console.error('Error checking/updating chat history:', error);
