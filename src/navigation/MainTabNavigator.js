@@ -1,6 +1,7 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 import { Ionicons, AntDesign } from "@expo/vector-icons";
+import { Feather } from '@expo/vector-icons';
 import HomeScreens from "../screens/HomeScreens";
 import AllOrdersScreen from "../screens/AllOrdersScreen";
 import AllTeamScreen from "../screens/AllTeamScreen";
@@ -11,6 +12,7 @@ import { View,Image,Animated } from "react-native";
 import { useContext, useEffect } from "react";
 import MainHeader from "./component/mainHeader";
 import { AppContext } from "../../context/appContext";
+import DispatchScreen from "../screens/DispatchScreen";
 const Tab = createBottomTabNavigator();
 
 const MainTabNavigator = () => {
@@ -57,6 +59,19 @@ const MainTabNavigator = () => {
           headerTitle:t('tab.orders'),
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="albums-outline" size={size} color={color} />
+
+          ),
+        }}
+      />
+   <Tab.Screen
+        name="Dispatch"
+        component={DispatchScreen}
+        options={{
+          tabBarLabel: t('tab.dispatch'),
+          headerTitle:t('tab.dispatch'),
+          tabBarIcon: ({ color, size }) => (
+            <Feather name="truck" size={size} color={color} />
+
           ),
         }}
       />
