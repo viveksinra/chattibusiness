@@ -18,7 +18,7 @@ const StockScreen = () => {
   const { t } = useTranslation();
   const [allStock, setAllStock] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [selectedTab, setSelectedTab] = useState('stockData');
+  const [selectedTab, setSelectedTab] = useState('sellData');
 
   const getStock = async () => {
     setLoading(true);
@@ -52,8 +52,8 @@ const StockScreen = () => {
 
   const renderTabs = () => {
     const tabs = [
-      { id: 'stockData', label: t('Stock Data') },
       { id: 'sellData', label: t('Sell Data') },
+      { id: 'stockData', label: t('Stock Data') },
     ];
 
     return tabs.map(tab => (
@@ -69,27 +69,31 @@ const StockScreen = () => {
 
   const renderContent = () => {
     return selectedTab === 'stockData' ? (
+      
       <>
-          <Text style={styles.headerText}>
-            Stock Data
-            <Text style={styles.highlightText}> quality </Text>
-         Wise  :-
-            <TouchableOpacity style={styles.refreshButton} onPress={handleRefresh}>
-            <FontAwesome name="refresh" size={24} color="green" />
-            <Text> {t('refresh')}</Text>
-          </TouchableOpacity>
-          </Text>
-
     
-      <StockData products={allStock} />
-
+      <Text style={styles.headerText}>
+              Stock Data
+              <Text style={styles.highlightText}> quality </Text>
+           Wise  :-
+              <TouchableOpacity style={styles.refreshButton} onPress={handleRefresh}>
+              <FontAwesome name="refresh" size={24} color="green" />
+              <Text> {t('refresh')}</Text>
+            </TouchableOpacity>
+            </Text>
+  
+      
+        <StockData products={allStock} />
       </>
+
+      
     ) : (
       <>
          
       <SellDataTab products={allStock}/>
 
       </>
+  
     );
   };
 

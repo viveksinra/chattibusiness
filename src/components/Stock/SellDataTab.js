@@ -33,14 +33,14 @@ export default function MyExperience({products}) {
   };
 
   return (
-    <ScrollView style={{ backgroundColor: '#fff' }}>
+    <ScrollView style={{ backgroundColor: '#fff', width:"100%" }}>
       <SafeAreaView style={{ flex: 1, marginTop: 1, backgroundColor: '#fff' }}>
         <AddView
-          title={"Experiences"}
+          title={" Sell Data "}
           isAdding={isAdding}
           setIsAdding={setIsAdding}
-          addText={'Add Experience'}
-          viewText={'View Experiences'}
+          addText={'New Sell'}
+          viewText={'View Sell'}
         />
         {isAdding ? (
           <SellForm products={products} />

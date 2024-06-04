@@ -45,23 +45,8 @@ const SellList = ({ products }) => {
 
   return (
     <ScrollView style={styles.container}>
-      <Text style={styles.text}>Sell Data</Text>
-      {products.map((product) => (
-        <View key={product.product.productId} style={styles.productContainer}>
-          <Image source={{ uri: product.product.productImage }} style={styles.productImage} />
-          <View style={styles.productDetails}>
-            <Text style={styles.productName}>{product.product.productName} (Qty: {product.fullWeight} Kg)</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Quantity to Sell in Kg"
-              keyboardType="numeric"
-              value={sellData[product.product.productId].quantityToSell}
-              onChangeText={(value) => handleQuantityChange(product.product.productId, value)}
-            />
-        
-          </View>
-        </View>
-      ))}
+      <Text style={styles.text}>Sell List</Text>
+    
       
     </ScrollView>
   );
