@@ -86,16 +86,8 @@ const StockScreen = () => {
       </>
     ) : (
       <>
-                <Text style={styles.headerText}>
-            Sell Data
-            <Text style={styles.highlightText}> quality </Text>
-         Wise  :-
-            <TouchableOpacity style={styles.refreshButton} onPress={handleRefresh}>
-            <FontAwesome name="refresh" size={24} color="green" />
-            <Text> {t('refresh')}</Text>
-          </TouchableOpacity>
-          </Text>
-      <SellDataTab />
+         
+      <SellDataTab products={allStock}/>
 
       </>
     );
