@@ -1,53 +1,37 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, ScrollView, Image } from 'react-native';
+import React from 'react';
+import { View, Text, ScrollView, StyleSheet, Image } from 'react-native';
 
-const SellList = ({ products }) => {
-  const initialSellData = products.reduce((acc, product) => {
-    acc[product.product.productId] = {
-      quantityToSell: '',
-    };
+const SellList = ({ sellListData }) => {
+    const overallData = sellListData.overallData
+    const allSellData = sellListData.allSellData
+  const productDetails = overallData?.products.reduce((acc, item) => {
+    acc[item.product.productId] = item.product;
     return acc;
   }, {});
-
-  const [sellData, setSellData] = useState(initialSellData);
-  const [dhala, setDhala] = useState('');
-  const [freight, setFreight] = useState('');
-  const [miscellaneous, setMiscellaneous] = useState('');
-
-  const handleQuantityChange = (productId, value) => {
-    setSellData({
-      ...sellData,
-      [productId]: {
-        ...sellData[productId],
-        quantityToSell: value,
-      },
-    });
-  };
-
-  const handleSubmit = () => {
-    for (let productId in sellData) {
-      const product = products.find(p => p.product.productId === productId);
-      const quantityToSell = parseFloat(sellData[productId].quantityToSell);
-      if (quantityToSell > product.fullWeight) {
-        alert(`Quantity to sell for ${product.product.productName} cannot exceed available quantity`);
-        return;
-      }
-    }
-    const submissionData = {
-      products: sellData,
-      dhala,
-      freight,
-      miscellaneous
-    };
-    console.log('Sell Data Submitted:', submissionData);
-    // You can now submit the submissionData object to your backend or perform any other action required
-  };
 
   return (
     <ScrollView style={styles.container}>
       <Text style={styles.text}>Sell List</Text>
-    
-      
+      {allSellData.map((sell, index) => (
+        <View key={index} style={styles.sellContainer}>
+          <Text style={styles.buyerDetail}>Buyer: {sell.buyerDetail}</Text>
+          <Text style={styles.billNumber}>Bill Number: {sell.billNumber}</Text>
+          <Text style={styles.paymentStatus}>Payment Status: {sell.paymentStatus}</Text>
+          {sell.products.map((product, idx) => {
+            const productDetail = productDetails[product.productId];
+            return (
+              <View key={idx} style={styles.productContainer}>
+                <Image source={{ uri: productDetail.productImage }} style={styles.productImage} />
+                <View style={styles.productInfo}>
+                  <Text style={styles.productName}>{productDetail.productName}</Text>
+                  <Text style={styles.productPrice}>Price: {product.price}</Text>
+                  <Text style={styles.productWeight}>Weight: {product.weight}</Text>
+                </View>
+              </View>
+            );
+          })}
+        </View>
+      ))}
     </ScrollView>
   );
 };
@@ -56,43 +40,51 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    width:"100%",
+    width: '100%',
   },
   text: {
     fontSize: 20,
     textAlign: 'center',
     marginBottom: 10,
   },
+  sellContainer: {
+    marginBottom: 20,
+    padding: 10,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 5,
+  },
+  buyerDetail: {
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  billNumber: {
+    fontSize: 14,
+  },
+  paymentStatus: {
+    fontSize: 14,
+    marginBottom: 10,
+  },
   productContainer: {
     flexDirection: 'row',
-    alignItems: 'center',
     marginBottom: 10,
   },
   productImage: {
     width: 50,
     height: 50,
     marginRight: 10,
-    borderRadius:10
   },
-  productDetails: {
-    flex: 1,
+  productInfo: {
+    justifyContent: 'center',
   },
   productName: {
     fontSize: 16,
-    marginBottom: 5,
   },
-  inputContainer: {
-    marginTop: 10,
-    borderRadius:20
+  productPrice: {
+    fontSize: 14,
   },
-  input: {
-    height: 40,
-    borderColor: 'gray',
-    borderWidth: 1,
-    marginBottom: 10,
-    paddingLeft: 10,
-    borderRadius:20
-
+  productWeight: {
+    fontSize: 14,
   },
 });
 

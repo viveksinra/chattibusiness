@@ -113,6 +113,21 @@ const SellForm = ({ products, setIsAdding }) => {
 
   return (
     <ScrollView style={styles.container}>
+        <View style={{marginTop:7}}></View>
+              <LabeledInput
+          label="Bill Number"
+          placeholder="Bill Number"
+          keyboardType="numeric"
+          value={billNumber}
+          onChangeText={setBillNumber}
+        />
+     <LabeledInput
+          label="Buyer Detail - Name/Mobile No"
+          placeholder="Buyer Detail - Name/Mobile No"
+          value={buyerDetail}
+          onChangeText={setBuyerDetail}
+        />
+  
       {products.map((product) => (
         <View key={product.product.productId} style={styles.productContainer}>
           <Image source={{ uri: product.product.productImage }} style={styles.productImage} />
@@ -157,19 +172,7 @@ const SellForm = ({ products, setIsAdding }) => {
           value={miscellaneous}
           onChangeText={setMiscellaneous}
         />
-        <LabeledInput
-          label="Buyer Detail"
-          placeholder="Buyer Detail"
-          value={buyerDetail}
-          onChangeText={setBuyerDetail}
-        />
-        <LabeledInput
-          label="Bill Number"
-          placeholder="Bill Number"
-          keyboardType="numeric"
-          value={billNumber}
-          onChangeText={setBillNumber}
-        />
+   
         <View style={styles.radioContainer}>
           <Text style={styles.radioText}>Payment Status:</Text>
           <View style={styles.radioOptionContainer}>
