@@ -28,9 +28,7 @@ export default function SellDataTab({ allStock }) {
       });
 
       if (response.data.variant === "success") {
-        console.log("stock is getting loaded")
         setSellListData(response.data.data);
-        console.log(response.data.data)
 
       } else {
         alert("Failed to connect to server, check your internet connection");

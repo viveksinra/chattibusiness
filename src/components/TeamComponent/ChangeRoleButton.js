@@ -20,7 +20,7 @@ const ChangeRoleButton = ({team,fetchData}) => {
     { label: 'Business', id: 'business' },
     { label: 'Operative', id: 'operative' },
     { label: 'Collaborator', id: 'collaborator' },
-    { label: 'User', id: 'user' },
+    { label: 'None', id: 'none' },
   ];
 
   const handleRoleChange = (role) => {

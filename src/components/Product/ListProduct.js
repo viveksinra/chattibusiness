@@ -37,7 +37,6 @@ const ListProduct = ({ product,getProduct }) => {
       const token = await SecureStore.getItemAsync('authToken');
       const response = await axios.post(url, { newPrice:newPrice }, { headers: { 'Content-Type': 'application/json', Authorization: token } });
       const responseData = response.data;
-      console.log(responseData)
       if (responseData.variant === "success") {
         ToastAndroid.show(responseData.message, ToastAndroid.SHORT);
         getProduct()

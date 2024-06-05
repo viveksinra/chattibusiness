@@ -84,7 +84,6 @@ const SellForm = ({ allStock, setIsAdding }) => {
         headers: { 'Content-Type': 'application/json', Authorization: token },
       });
       const responseData = response.data;
-      console.log(responseData);
       if (responseData.variant === 'success') {
         ToastAndroid.show(responseData.message, ToastAndroid.SHORT);
         resetForm();
