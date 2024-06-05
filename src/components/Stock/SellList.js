@@ -4,7 +4,7 @@ import { View, Text, ScrollView, StyleSheet, Image } from 'react-native';
 const SellList = ({ sellListData }) => {
     const overallData = sellListData.overallData
     const allSellData = sellListData.allSellData
-  const productDetails = overallData?.products.reduce((acc, item) => {
+  const productDetails = overallData?.products?.reduce((acc, item) => {
     acc[item.product.productId] = item.product;
     return acc;
   }, {});

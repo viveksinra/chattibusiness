@@ -83,14 +83,14 @@ const StockScreen = () => {
             </Text>
   
       
-        <StockData products={allStock} />
+        <StockData allStock={allStock} />
       </>
 
       
     ) : (
       <>
          
-      <SellDataTab products={allStock}/>
+      <SellDataTab allStock={allStock}/>
 
       </>
   

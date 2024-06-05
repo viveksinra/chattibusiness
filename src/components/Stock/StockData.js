@@ -2,19 +2,35 @@ import React from 'react';
 import { View, Text, Image, StyleSheet, ScrollView } from 'react-native';
 import { useTranslation } from 'react-i18next';
 
-const StockData = ({ products }) => {
+const StockData = ({ allStock }) => {
   const { t } = useTranslation();
 
   return (
     <ScrollView>
-      {products.map((item, index) => (
+      {allStock.map((item, index) => (
         <View key={index} style={styles.product}>
-          <Text style={styles.productName}>{t('LanguageCode') === "en-IN" ? item.product.productName : item.product.productNameHindi}</Text>
-        <Text style={styles.quality}>{t('product.one')} {t('LanguageCode') === "en-IN" ? item.product.quality : item.product.qualityHindi}</Text>
+          <Text style={styles.productName}>
+            {t('LanguageCode') === "en-IN" ? item.product.productName : item.product.productNameHindi}
+          </Text>
+          <Text style={styles.quality}>
+            {t('product.one')} {t('LanguageCode') === "en-IN" ? item.product.quality : item.product.qualityHindi}
+          </Text>
           <View style={styles.details}>
-            <Text style={styles.detailText}>Quantity: {item.fullWeight} kg - worth ( ₹{item.fullPrice} )</Text>
-            <Text style={styles.detailText}> Dhala + Freight + Miscellaneous: ₹{item.fullDhala} + ₹{item.fullFreight} +  ₹{item.fullMiscellaneous}</Text>
-            <Text style={styles.detailText}>Actual Amount: ₹{(+item.fullPrice) - (+item.fullDhala + +item.fullFreight + +item.fullMiscellaneous)}</Text>
+            <Text style={styles.detailText}>
+              Quantity: {item.purchaseData.fullWeight} kg - worth ( ₹{item.purchaseData.fullPrice} )
+            </Text>
+            <Text style={styles.detailText}>
+              Dhala + Freight + Miscellaneous: ₹{item.purchaseData.fullDhala} + ₹{item.purchaseData.fullFreight} + ₹{item.purchaseData.fullMiscellaneous}
+            </Text>
+            <Text style={styles.detailText}>
+              Actual Amount: ₹{(+item.purchaseData.fullPrice) - (+item.purchaseData.fullDhala + +item.purchaseData.fullFreight + +item.purchaseData.fullMiscellaneous)}
+            </Text>
+            <Text style={styles.detailText}>
+              Total Sold: {item.sellData.totalSellWeight} kg - Earned ( ₹{item.sellData.totalSellPrice} )
+            </Text>
+            <Text style={styles.detailBoldText}>
+              Current Stock: {item.currentData.totalStock} kg - Cash in Hand ( ₹{item.currentData.totalCash} )
+            </Text>
           </View>
         </View>
       ))}
@@ -25,11 +41,11 @@ const StockData = ({ products }) => {
 const styles = StyleSheet.create({
   product: {
     borderWidth: 1,
-    borderRadius:30,
+    borderRadius: 30,
     borderColor: '#ddd',
     padding: 20,
     margin: 20,
-    backgroundColor:"white"
+    backgroundColor: 'white',
   },
   image: {
     width: 150,
@@ -43,18 +59,15 @@ const styles = StyleSheet.create({
   quality: {
     fontSize: 16,
   },
-  productNameHindi: {
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  qualityHindi: {
-    fontSize: 16,
-  },
   details: {
     marginTop: 10,
   },
   detailText: {
     fontSize: 14,
+  },
+  detailBoldText: {
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
 

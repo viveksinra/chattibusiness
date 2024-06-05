@@ -7,7 +7,7 @@ import { startUrl } from '../../Context/ContentContext';
 import * as SecureStore from 'expo-secure-store';
 import axios from 'axios';
 
-export default function SellDataTab({ products }) {
+export default function SellDataTab({ allStock }) {
   const [sellListData, setSellListData] = useState({allSellData:[],overallData:{}});
   const [isAdding, setIsAdding] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -64,7 +64,7 @@ export default function SellDataTab({ products }) {
           viewText={'View Sell'}
         />
         {isAdding ? (
-          products.length > 0 ? (<SellForm products={products} setIsAdding={setIsAdding} />) :  (<Text>No stock data</Text>)
+          allStock.length > 0 ? (<SellForm allStock={allStock} setIsAdding={setIsAdding} />) :  (<Text>No stock data</Text>)
         ) : (
           loading ? (
             <ActivityIndicator size="large" color="#0000ff" />

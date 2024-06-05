@@ -6,12 +6,12 @@ import { startUrl } from '../../Context/ContentContext';
 import * as SecureStore from 'expo-secure-store';
 import LabeledInput from './LabeledInput';
 
-const SellForm = ({ products, setIsAdding }) => {
-  const initialSellData = products.reduce((acc, product) => {
+const SellForm = ({ allStock, setIsAdding }) => {
+  const initialSellData = allStock.reduce((acc, product) => {
     acc[product.product.productId] = {
-      quantityToSell: '',
-      price: product.fullPrice,
-      weight: product.fullWeight,
+      quantityToSell: '0',
+      price: '0',
+      totalStock: product.currentData.totalStock,
     };
     return acc;
   }, {});
@@ -47,16 +47,15 @@ const SellForm = ({ products, setIsAdding }) => {
 
   const handleSubmit = async () => {
     for (let productId in sellData) {
-      const product = products.find((p) => p.product.productId === productId);
+      const product = allStock.find((p) => p.product.productId === productId);
       const quantityToSell = parseFloat(sellData[productId].quantityToSell);
-      if (quantityToSell > product.fullWeight) {
-        alert(`Quantity to sell for ${product.product.productName} cannot exceed available quantity`);
+      if (quantityToSell > product.currentData.totalStock) {
+        alert(`Quantity to sell for ${product.product.productName} cannot exceed available stock`);
         return;
       }
     }
 
     const submissionData = {
-
       products: Object.keys(sellData).map((productId) => ({
         productId,
         price: sellData[productId].price,
@@ -89,7 +88,7 @@ const SellForm = ({ products, setIsAdding }) => {
       if (responseData.variant === 'success') {
         ToastAndroid.show(responseData.message, ToastAndroid.SHORT);
         resetForm();
-        setIsAdding(false)
+        setIsAdding(false);
       } else {
         ToastAndroid.show(responseData.message, ToastAndroid.SHORT);
       }
@@ -113,26 +112,25 @@ const SellForm = ({ products, setIsAdding }) => {
 
   return (
     <ScrollView style={styles.container}>
-        <View style={{marginTop:7}}></View>
-              <LabeledInput
-          label="Bill Number"
-          placeholder="Bill Number"
-          keyboardType="numeric"
-          value={billNumber}
-          onChangeText={setBillNumber}
-        />
-     <LabeledInput
-          label="Buyer Detail - Name/Mobile No"
-          placeholder="Buyer Detail - Name/Mobile No"
-          value={buyerDetail}
-          onChangeText={setBuyerDetail}
-        />
-  
-      {products.map((product) => (
+      <View style={{ marginTop: 7 }}></View>
+      <LabeledInput
+        label="Bill Number"
+        placeholder="Bill Number"
+        keyboardType="numeric"
+        value={billNumber}
+        onChangeText={setBillNumber}
+      />
+      <LabeledInput
+        label="Buyer Detail - Name/Mobile No"
+        placeholder="Buyer Detail - Name/Mobile No"
+        value={buyerDetail}
+        onChangeText={setBuyerDetail}
+      />
+      {allStock.map((product) => (
         <View key={product.product.productId} style={styles.productContainer}>
           <Image source={{ uri: product.product.productImage }} style={styles.productImage} />
           <View style={styles.productDetails}>
-            <Text style={styles.productName}>{product.product.productName} ({product.fullWeight} Kg)</Text>
+            <Text style={styles.productName}>{product.product.productName} ({product.currentData.totalStock} Kg)</Text>
             <LabeledInput
               label="Quantity to Sell in Kg"
               placeholder="Quantity to Sell in Kg"
@@ -172,7 +170,6 @@ const SellForm = ({ products, setIsAdding }) => {
           value={miscellaneous}
           onChangeText={setMiscellaneous}
         />
-   
         <View style={styles.radioContainer}>
           <Text style={styles.radioText}>Payment Status:</Text>
           <View style={styles.radioOptionContainer}>
